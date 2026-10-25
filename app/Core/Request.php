@@ -74,11 +74,49 @@ class Request
             $uri = substr($uri, 0, $pos);
         }
 
-        // Tangani sub-folder instalasi jika dijalankan di /kukuh_app atau subdirektori (Windows compatible)
-        $scriptName = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
-        $scriptName = rtrim($scriptName, '/');
-        if ($scriptName !== '' && $scriptName !== '.' && strpos($uri, $scriptName) === 0) {
-            $uri = substr($uri, strlen($scriptName));
+        // Normalisasi path separator
+        $uri = str_replace('\\', '/', $uri);
+
+        // Ambil path script dinamis (contoh: /kukuh_app/public/index.php)
+        $scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+        $scriptDir  = dirname($scriptName);
+        $projectDir = dirname($scriptDir);
+
+        $candidatePrefixes = [];
+
+        // 1. Cek dari konfigurasi base_url
+        $config = require __DIR__ . '/../../config/app.php';
+        if (!empty($config['base_url'])) {
+            $basePath = parse_url($config['base_url'], PHP_URL_PATH);
+            if (!empty($basePath) && $basePath !== '/') {
+                $candidatePrefixes[] = rtrim($basePath, '/');
+                $candidatePrefixes[] = rtrim($basePath, '/') . '/public';
+            }
+        }
+
+        // 2. Tambahkan kandidat dari SCRIPT_NAME Apache
+        if ($scriptDir !== '/' && $scriptDir !== '.' && $scriptDir !== '') {
+            $candidatePrefixes[] = $scriptDir;
+        }
+        if ($projectDir !== '/' && $projectDir !== '.' && $projectDir !== '') {
+            $candidatePrefixes[] = $projectDir;
+        }
+
+        // Urutkan dari prefix terpanjang ke terpendek
+        usort($candidatePrefixes, function ($a, $b) {
+            return strlen($b) <=> strlen($a);
+        });
+
+        foreach ($candidatePrefixes as $prefix) {
+            if (!empty($prefix) && strpos($uri, $prefix) === 0) {
+                $uri = substr($uri, strlen($prefix));
+                break;
+            }
+        }
+
+        // Bersihkan jika masih diawali /public
+        if (strpos($uri, '/public') === 0) {
+            $uri = substr($uri, 7);
         }
 
         $uri = trim($uri, '/');
