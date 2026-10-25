@@ -74,9 +74,10 @@ class Request
             $uri = substr($uri, 0, $pos);
         }
 
-        // Tangani sub-folder instalasi jika dijalankan di /kukuh_app/public atau /kukuh_app
-        $scriptName = dirname($_SERVER['SCRIPT_NAME']);
-        if ($scriptName !== '/' && $scriptName !== '\\' && strpos($uri, $scriptName) === 0) {
+        // Tangani sub-folder instalasi jika dijalankan di /kukuh_app atau subdirektori (Windows compatible)
+        $scriptName = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+        $scriptName = rtrim($scriptName, '/');
+        if ($scriptName !== '' && $scriptName !== '.' && strpos($uri, $scriptName) === 0) {
             $uri = substr($uri, strlen($scriptName));
         }
 

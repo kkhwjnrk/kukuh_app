@@ -48,8 +48,17 @@ function url(string $path = ''): string
 {
     static $baseUrl = null;
     if ($baseUrl === null) {
-        $config = require __DIR__ . '/../../config/app.php';
-        $baseUrl = rtrim($config['base_url'], '/');
+        if (!empty($_SERVER['HTTP_HOST'])) {
+            $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'];
+            $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+            $scriptDir = preg_replace('#/public$#', '', $scriptDir);
+            $scriptDir = rtrim($scriptDir, '/');
+            $baseUrl = $scheme . '://' . $host . $scriptDir;
+        } else {
+            $config = require __DIR__ . '/../../config/app.php';
+            $baseUrl = rtrim($config['base_url'], '/');
+        }
     }
 
     $cleanPath = '/' . ltrim($path, '/');
