@@ -67,4 +67,3 @@
         </a>
     </div>
 </aside>
-<div class="app-content">

@@ -1,4 +1,4 @@
-<div style="display: grid; grid-template-columns: 340px 1fr; gap: 1.5rem; align-items: flex-start;">
+<div class="two-col-grid">
     <!-- KOLOM KIRI: FORM TAMBAH KATEGORI BARU -->
     <div class="card">
         <div class="card-header">

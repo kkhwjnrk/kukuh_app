@@ -65,7 +65,7 @@
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem;">
+<div class="dashboard-grid">
     <!-- TABEL TRANSAKSI TERAKHIR -->
     <div class="card">
         <div class="card-header">

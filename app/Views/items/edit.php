@@ -14,7 +14,7 @@
             <form action="<?= url('/items/update/' . $item['id']) ?>" method="POST" enctype="multipart/form-data">
                 <?= csrf_field() ?>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                <div class="form-grid-2">
                     <div class="form-group">
                         <label class="form-label" for="kode_item"><?= htmlspecialchars(term('item.code_label')) ?> <span style="color: var(--danger);">*</span></label>
                         <input type="text" name="kode_item" id="kode_item" class="form-control" required value="<?= htmlspecialchars($item['kode_item']) ?>">
@@ -38,7 +38,7 @@
                     <input type="text" name="nama_item" id="nama_item" class="form-control" required value="<?= htmlspecialchars($item['nama_item']) ?>">
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
+                <div class="form-grid-2">
                     <div class="form-group">
                         <label class="form-label" for="harga"><?= htmlspecialchars(term('item.price_label')) ?> (Rp) <span style="color: var(--danger);">*</span></label>
                         <input type="number" name="harga" id="harga" class="form-control" min="0" step="500" required value="<?= htmlspecialchars((int)$item['harga']) ?>">

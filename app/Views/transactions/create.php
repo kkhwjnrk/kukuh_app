@@ -39,7 +39,7 @@
     </div>
 
     <!-- AREA KERANJANG BELANJA (INTERACTIVE CART) -->
-    <div style="display: grid; grid-template-columns: 360px 1fr; gap: 1.25rem; align-items: flex-start;">
+    <div class="cart-layout-grid">
         <!-- PANEL PILIH ITEM -->
         <div class="card">
             <div class="card-header">

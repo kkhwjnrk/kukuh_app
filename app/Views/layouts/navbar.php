@@ -20,4 +20,3 @@
         <?php endif; ?>
     </div>
 </header>
-<main class="app-body">

@@ -57,15 +57,18 @@ abstract class Controller
             return;
         }
 
-        // Tampilkan kerangka tata letak (Header, Sidebar, Navbar, Konten, Footer)
+        // Tampilkan kerangka tata letak yang bersih dan terstruktur
         require __DIR__ . '/../Views/layouts/header.php';
-        require __DIR__ . '/../Views/layouts/navbar.php';
-        echo '<div class="app-wrapper flex flex-col md:flex-row min-h-screen">';
+        echo '<div class="app-container">';
         require __DIR__ . '/../Views/layouts/sidebar.php';
-        echo '<main class="app-main flex-1 p-6 bg-slate-50 overflow-y-auto">';
+        echo '<div class="app-content">';
+        require __DIR__ . '/../Views/layouts/navbar.php';
+        echo '<main class="app-body">';
         require __DIR__ . '/../Views/layouts/alert.php';
         echo $content;
-        echo '</main></div>';
+        echo '</main>';
+        echo '</div>'; // .app-content
+        echo '</div>'; // .app-container
         require __DIR__ . '/../Views/layouts/footer.php';
     }
 
@@ -85,7 +88,8 @@ abstract class Controller
         require __DIR__ . '/../Views/layouts/header.php';
         require __DIR__ . '/../Views/layouts/alert.php';
         require __DIR__ . '/../Views/' . $viewPath . '.php';
-        require __DIR__ . '/../Views/layouts/footer.php';
+        echo '<script src="' . asset('assets/js/app.js') . '"></script>';
+        echo '</body></html>';
     }
 
     /**
