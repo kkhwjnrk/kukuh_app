@@ -28,9 +28,11 @@
 - Basis Data: MySQL / MariaDB.
 
 ### 2. Langkah Pengoperasian
-1. Letakkan folder proyek di dalam direktori server lokal:
-   - Laragon: `C:\laragon\www\kukuh_app`
-   - XAMPP: `C:\xampp\htdocs\kukuh_app`
+1. Buka folder `C:\laragon\www\` (Laragon) atau `C:\xampp\htdocs\` (XAMPP), lalu *clone* repositori:
+   ```bash
+   git clone https://github.com/kkhwjnrk/kukuh_app.git
+   cd kukuh_app
+   ```
 2. Jalankan migrasi dan seeder otomatis melalui terminal:
    ```bash
    php database/migrate.php

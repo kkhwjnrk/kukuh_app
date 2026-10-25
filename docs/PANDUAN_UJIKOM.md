@@ -7,10 +7,13 @@ Dokumen ini adalah panduan rahasia Anda saat hari-H ujian untuk melakukan penyes
 
 ## ⚡ Langkah 1: Instalasi Cepat di Komputer Ujian (2 Menit)
 
-1. Buka folder Laragon (`C:\laragon\www\`) atau XAMPP (`C:\xampp\htdocs\`).
-2. *Clone* atau *extract* repositori ini ke dalam folder tersebut (misal: `C:\laragon\www\kukuh_app`).
-3. Pastikan server Apache dan MySQL sudah dinyalakan pada panel Laragon/XAMPP.
-4. Buka terminal (CMD / PowerShell) di dalam direktori proyek, lalu jalankan:
+1. Buka folder Laragon (`C:\laragon\www\`) atau XAMPP (`C:\xampp\htdocs\`) di terminal:
+   ```bash
+   git clone https://github.com/kkhwjnrk/kukuh_app.git
+   cd kukuh_app
+   ```
+2. Pastikan server Apache dan MySQL sudah dinyalakan pada panel Laragon/XAMPP.
+3. Jalankan migrasi dan seeder otomatis dengan satu perintah:
    ```bash
    php database/migrate.php
    ```
