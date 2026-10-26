@@ -322,6 +322,6 @@ class FakturController extends Controller
         $this->view('faktur/print', [
             'pageTitle' => "Cetak Faktur Penjualan - {$noFaktur}",
             'faktur'    => $faktur,
-        ], false);
+        ], null);
     }
 }

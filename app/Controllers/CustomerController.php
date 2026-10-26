@@ -179,6 +179,6 @@ class CustomerController extends Controller
             'pageTitle' => 'Laporan Rekap Data Customer',
             'customers' => $customers,
             'keyword'   => $keyword,
-        ], false);
+        ], null);
     }
 }

@@ -51,8 +51,8 @@ abstract class Controller
         require $viewFile;
         $content = ob_get_clean();
 
-        // Jika layout adalah null, langsung tampilkan konten murni (misal untuk cetak nota)
-        if ($layout === null) {
+        // Jika layout adalah null atau false, langsung tampilkan konten murni (misal untuk cetak nota)
+        if ($layout === null || $layout === false || $layout === '') {
             echo $content;
             return;
         }

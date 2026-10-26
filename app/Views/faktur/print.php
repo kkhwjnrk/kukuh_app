@@ -4,222 +4,502 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Faktur Penjualan - <?= htmlspecialchars($faktur['no_faktur']) ?></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: #f8fafc; color: #0f172a; padding: 2rem; font-size: 13px; line-height: 1.4; }
-        .invoice-card { max-width: 880px; margin: 0 auto; background: #fff; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
-        
-        /* HEADER PERUSAHAAN & TITLE */
-        .header-grid { display: grid; grid-template-columns: 1.4fr 1fr; border-bottom: 2px solid #0f172a; padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
-        .company-info h1 { font-size: 1.4rem; font-weight: 800; color: #0f172a; text-transform: uppercase; margin-bottom: 0.25rem; }
-        .company-info p { color: #475569; font-size: 0.85rem; line-height: 1.4; }
-        .invoice-title { text-align: right; }
-        .invoice-title h2 { font-size: 1.7rem; font-weight: 800; color: #1e3a8a; letter-spacing: 0.5px; text-transform: uppercase; }
-        .invoice-title .status { display: inline-block; margin-top: 0.35rem; font-weight: 700; color: #15803d; background: #dcfce7; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #111;
+        }
 
-        /* DUA KOLOM REKANAN & METADATA */
-        .meta-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-        .box-info { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem 1.25rem; }
-        .box-title { font-weight: 700; color: #0f172a; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; margin-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.35rem; }
-        .box-content table { width: 100%; border-collapse: collapse; }
-        .box-content td { padding: 0.25rem 0; font-size: 0.85rem; border: none; vertical-align: top; }
-        .box-content td.label { width: 110px; color: #64748b; font-weight: 500; }
-        .box-content td.val { color: #0f172a; font-weight: 600; }
+        body {
+            background-color: #f1f5f9;
+            padding: 20px 0;
+        }
+
+        /* FLOATING ACTION BAR FOR SCREEN VIEW */
+        .no-print-bar {
+            max-width: 820px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .btn-back {
+            background-color: #f1f5f9;
+            color: #334155;
+            border-color: #cbd5e1;
+        }
+
+        .btn-back:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-print {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .btn-print:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* INVOICE PAPER (PERSIS SESUAI FOTO 3 UJIKOM) */
+        .invoice-sheet {
+            max-width: 820px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 28px 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        /* HEADER */
+        .header-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 10px;
+            margin-bottom: 12px;
+        }
+
+        .company-block {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .logo-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #334155;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 900;
+            font-family: 'Times New Roman', Times, serif;
+            flex-shrink: 0;
+        }
+
+        .company-text h1 {
+            font-size: 15px;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .company-text p {
+            font-size: 10px;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .invoice-title-block {
+            text-align: right;
+        }
+
+        .invoice-title-block h2 {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            color: #1e293b;
+            font-family: 'Arial Black', Arial, sans-serif;
+            text-transform: uppercase;
+        }
+
+        /* METADATA INFO DUA KOLOM */
+        .meta-wrap {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            font-size: 11px;
+        }
+
+        .meta-col-left {
+            width: 52%;
+        }
+
+        .meta-col-right {
+            width: 44%;
+        }
+
+        .meta-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .meta-table td {
+            padding: 1.5px 0;
+            vertical-align: top;
+            border: none;
+            font-size: 11px;
+        }
+
+        .meta-table td.m-label {
+            width: 105px;
+            color: #111;
+        }
+
+        .meta-table td.m-colon {
+            width: 10px;
+            text-align: center;
+        }
+
+        .meta-table td.m-val {
+            font-weight: normal;
+            color: #000;
+        }
 
         /* TABEL BARANG */
-        table.items-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
-        table.items-table th, table.items-table td { border: 1px solid #cbd5e1; padding: 0.65rem 0.85rem; font-size: 0.85rem; }
-        table.items-table th { background: #f1f5f9; color: #0f172a; text-transform: uppercase; font-size: 0.75rem; font-weight: 700; }
-        table.items-table tr:nth-child(even) td { background: #fafafa; }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
 
-        /* RINGKASAN PEMBAYARAN */
-        .summary-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; align-items: start; margin-bottom: 2.5rem; }
-        .terbilang-box { background: #f1f5f9; border-radius: 6px; padding: 1rem; border-left: 4px solid #2563eb; }
-        .terbilang-title { font-weight: 700; font-size: 0.75rem; color: #475569; text-transform: uppercase; margin-bottom: 0.25rem; }
-        .terbilang-text { font-size: 0.85rem; color: #1e293b; font-style: italic; }
+        .items-table th,
+        .items-table td {
+            border: 1px solid #71717a;
+            padding: 4px 6px;
+            font-size: 10.5px;
+        }
 
-        table.summary-table { width: 100%; border-collapse: collapse; }
-        table.summary-table td { padding: 0.4rem 0.5rem; font-size: 0.9rem; border: none; }
-        table.summary-table td.label { color: #64748b; }
-        table.summary-table td.val { text-align: right; font-weight: 600; color: #0f172a; }
-        table.summary-table tr.grand-row td { border-top: 2px solid #0f172a; font-size: 1.15rem; font-weight: 800; color: #1e3a8a; padding-top: 0.6rem; }
+        .items-table th {
+            background-color: #f8fafc;
+            font-weight: bold;
+            text-align: center;
+        }
 
-        /* TANDA TANGAN DUA PIHAK */
-        .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; text-align: center; }
-        .sig-box { border-top: 1px dashed #cbd5e1; padding-top: 0.5rem; }
-        .sig-space { height: 75px; }
-        .sig-name { font-weight: 700; color: #0f172a; border-top: 1px solid #0f172a; display: inline-block; min-width: 180px; padding-top: 0.25rem; }
+        .items-table td.c-center {
+            text-align: center;
+        }
 
-        /* ACTION BAR */
-        .actions-bar { max-width: 880px; margin: 0 auto 1.25rem auto; display: flex; justify-content: space-between; align-items: center; }
-        .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1.1rem; border-radius: 6px; font-weight: 600; font-size: 0.875rem; cursor: pointer; text-decoration: none; border: none; }
-        .btn-primary { background: #2563eb; color: #fff; }
-        .btn-secondary { background: #e2e8f0; color: #334155; }
+        .items-table td.c-right {
+            text-align: right;
+        }
 
+        .items-table tr.total-qty-row td {
+            font-weight: bold;
+            background: #fafafa;
+        }
+
+        /* FOOTER & TOTAL */
+        .footer-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 6px;
+            font-size: 11px;
+        }
+
+        .notes-block {
+            width: 56%;
+        }
+
+        .notes-block .note-title {
+            font-weight: bold;
+            margin-bottom: 2px;
+            font-size: 10.5px;
+        }
+
+        .notes-block .note-desc {
+            font-size: 10px;
+            color: #333;
+            line-height: 1.35;
+        }
+
+        .summary-block {
+            width: 38%;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .summary-table td {
+            padding: 2.5px 4px;
+            border: 1px solid #71717a;
+            font-size: 10.5px;
+        }
+
+        .summary-table td.s-label {
+            text-align: right;
+            width: 50%;
+            background-color: #f8fafc;
+            font-weight: normal;
+        }
+
+        .summary-table td.s-val {
+            text-align: right;
+            font-weight: normal;
+        }
+
+        .summary-table tr.s-grand td {
+            font-weight: bold;
+            background: #ffffff;
+        }
+
+        /* SIGNATURE SECTION */
+        .signatures-wrap {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .sig-item {
+            width: 220px;
+        }
+
+        .sig-space {
+            height: 52px;
+        }
+
+        .sig-name {
+            font-weight: normal;
+            border-top: 1px dotted #555;
+            padding-top: 3px;
+            display: inline-block;
+            min-width: 150px;
+        }
+
+        /* PRINT STYLES */
         @media print {
-            body { background: #fff; padding: 0; }
-            .actions-bar { display: none; }
-            .invoice-card { box-shadow: none; border: none; padding: 0; max-width: 100%; }
+            body {
+                background: #ffffff;
+                padding: 0;
+            }
+
+            .no-print-bar {
+                display: none !important;
+            }
+
+            .invoice-sheet {
+                box-shadow: none;
+                border: none;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="actions-bar">
-        <a href="<?= url('/faktur/show/' . $faktur['no_faktur']) ?>" class="btn btn-secondary">
-            &larr; Kembali ke Detail Faktur
+    <!-- TOMBOL AKSI ATAS (TIDAK AKAN TERCETAK DI KERTAS) -->
+    <div class="no-print-bar">
+        <a href="<?= url('/faktur') ?>" class="btn btn-back">
+            &larr; Kembali ke Daftar Faktur
         </a>
-        <button onclick="window.print()" class="btn btn-primary">
-            <svg fill="none" stroke="currentColor" width="18" height="18" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-            <span>Cetak Dokumen Sekarang (Print / PDF)</span>
-        </button>
+        <div style="display: flex; gap: 8px;">
+            <a href="<?= url('/faktur/show/' . $faktur['no_faktur']) ?>" class="btn btn-back">
+                Detail Faktur
+            </a>
+            <button onclick="window.print()" class="btn btn-print">
+                <svg fill="none" stroke="currentColor" width="16" height="16" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                <span>Cetak / Print Faktur (PDF)</span>
+            </button>
+        </div>
     </div>
 
-    <div class="invoice-card">
-        <!-- HEADER KOP PERUSAHAAN & FAKTUR TITLE (PERSIS CONTOH PHOTO 3) -->
-        <div class="header-grid">
-            <div class="company-info">
-                <h1><?= htmlspecialchars($faktur['nama_perusahaan']) ?></h1>
-                <p><?= htmlspecialchars($faktur['alamat_perusahaan']) ?></p>
-                <p><strong>Telp:</strong> <?= htmlspecialchars($faktur['telp_perusahaan']) ?> &bull; <strong>Fax:</strong> <?= htmlspecialchars($faktur['fax_perusahaan'] ?: '-') ?></p>
+    <!-- KERTAS FAKTUR PENJUALAN RESMI (PERSIS DOKUMEN FOTO 3) -->
+    <div class="invoice-sheet">
+
+        <!-- 1. KOP PERUSAHAAN & JUDUL FAKTUR -->
+        <div class="header-wrap">
+            <div class="company-block">
+                <div class="logo-badge">R</div>
+                <div class="company-text">
+                    <h1><?= htmlspecialchars($faktur['nama_perusahaan']) ?></h1>
+                    <p>No. Surat Izin Apotek : 503/00586/DPM-PTSP/kes/XII/2018</p>
+                    <p><?= htmlspecialchars($faktur['alamat_perusahaan']) ?></p>
+                    <p>Telp. <?= htmlspecialchars($faktur['telp_perusahaan']) ?>, Email : support@vmedis.com, Website : vmedis.com</p>
+                </div>
             </div>
-            <div class="invoice-title">
-                <h2>FAKTUR PENJUALAN</h2>
-                <div class="status">RESMI / VERIFIED</div>
+            <div class="invoice-title-block">
+                <h2>FAKTUR</h2>
             </div>
         </div>
 
-        <!-- REKANAN CUSTOMER & METADATA FAKTUR -->
-        <div class="meta-grid">
-            <!-- Kolom Kiri: Customer -->
-            <div class="box-info">
-                <div class="box-title">Kepada Yth. (Customer)</div>
-                <div class="box-content">
-                    <table>
-                        <tr>
-                            <td class="label">Nama Customer</td>
-                            <td class="val">: <?= htmlspecialchars($faktur['nama_customer']) ?></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Perusahaan/Klinik</td>
-                            <td class="val">: <?= htmlspecialchars($faktur['perusahaan_cust']) ?></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Alamat</td>
-                            <td class="val">: <?= htmlspecialchars($faktur['alamat_customer']) ?></td>
-                        </tr>
-                        <tr>
-                            <td class="label">No. Telepon</td>
-                            <td class="val">: <?= htmlspecialchars($faktur['telp_customer']) ?></td>
-                        </tr>
-                    </table>
-                </div>
+        <!-- 2. DATA PELANGGAN & TRANSAKSI -->
+        <div class="meta-wrap">
+            <!-- Kolom Kiri: Pelanggan -->
+            <div class="meta-col-left">
+                <table class="meta-table">
+                    <tr>
+                        <td class="m-label">Nama Pelanggan</td>
+                        <td class="m-colon">:</td>
+                        <td class="m-val"><?= htmlspecialchars($faktur['nama_customer']) ?></td>
+                    </tr>
+                    <tr>
+                        <td class="m-label">No. Telp</td>
+                        <td class="m-colon">:</td>
+                        <td class="m-val"><?= htmlspecialchars($faktur['telp_customer']) ?></td>
+                    </tr>
+                    <tr>
+                        <td class="m-label">Alamat</td>
+                        <td class="m-colon">:</td>
+                        <td class="m-val"><?= htmlspecialchars($faktur['alamat_customer']) ?></td>
+                    </tr>
+                </table>
             </div>
 
-            <!-- Kolom Kanan: Metadata Faktur -->
-            <div class="box-info">
-                <div class="box-title">Data Transaksi</div>
-                <div class="box-content">
-                    <table>
-                        <tr>
-                            <td class="label">No. Faktur</td>
-                            <td class="val" style="color: #1e3a8a;">: <?= htmlspecialchars($faktur['no_faktur']) ?></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Tanggal Faktur</td>
-                            <td class="val">: <?= date('d/m/Y', strtotime($faktur['tgl_faktur'])) ?></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Jatuh Tempo</td>
-                            <td class="val" style="color: #dc2626;">: <?= date('d/m/Y', strtotime($faktur['due_date'])) ?></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Cara Bayar</td>
-                            <td class="val">: <?= htmlspecialchars($faktur['metode_bayar']) ?></td>
-                        </tr>
-                        <tr>
-                            <td class="label">Kasir / User</td>
-                            <td class="val">: <?= htmlspecialchars($faktur['user']) ?></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- TABEL RINCIAN PRODUK (PERSIS DENGAN TABEL APOTEK DEMO PADA FOTO 3) -->
-        <table class="items-table">
-            <thead>
-                <tr>
-                    <th style="width: 40px; text-align: center;">No</th>
-                    <th>Nama Barang / Produk</th>
-                    <th style="width: 100px; text-align: center;">Satuan</th>
-                    <th style="width: 80px; text-align: center;">Qty</th>
-                    <th style="width: 140px; text-align: right;">Harga Satuan</th>
-                    <th style="width: 160px; text-align: right;">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($faktur['items'] as $idx => $item): ?>
+            <!-- Kolom Kanan: Kasir & Faktur -->
+            <div class="meta-col-right">
+                <table class="meta-table">
                     <tr>
-                        <td style="text-align: center; color: #64748b;"><?= $idx + 1 ?></td>
-                        <td style="font-weight: 600; color: #0f172a;"><?= htmlspecialchars($item['nama_produk']) ?></td>
-                        <td style="text-align: center;"><?= htmlspecialchars($item['jenis']) ?></td>
-                        <td style="text-align: center; font-weight: 700;"><?= (int)$item['qty'] ?></td>
-                        <td style="text-align: right;"><?= format_rupiah($item['price']) ?></td>
-                        <td style="text-align: right; font-weight: 700; color: #0f172a;"><?= format_rupiah($item['subtotal']) ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <!-- RINGKASAN PEMBAYARAN -->
-        <div class="summary-grid">
-            <div class="terbilang-box">
-                <div class="terbilang-title">Catatan Faktur:</div>
-                <div class="terbilang-text">
-                    Barang yang sudah dibeli dan diterima dalam kondisi baik tidak dapat ditukar/dikembalikan. Pembayaran jatuh tempo wajib dilunasi sebelum tanggal <?= date('d/m/Y', strtotime($faktur['due_date'])) ?>.
-                </div>
-            </div>
-
-            <div>
-                <table class="summary-table">
-                    <tr>
-                        <td class="label">Total Nilai Barang:</td>
-                        <td class="val"><?= format_rupiah($faktur['subtotal_items']) ?></td>
+                        <td class="m-label">Kasir</td>
+                        <td class="m-colon">:</td>
+                        <td class="m-val"><?= htmlspecialchars($faktur['user']) ?></td>
                     </tr>
                     <tr>
-                        <td class="label">PPN (Pajak):</td>
-                        <td class="val">+ <?= format_rupiah($faktur['ppn']) ?></td>
+                        <td class="m-label">Tanggal</td>
+                        <td class="m-colon">:</td>
+                        <td class="m-val"><?= date('d F Y H:i:s', strtotime($faktur['tgl_faktur'])) ?></td>
                     </tr>
                     <tr>
-                        <td class="label">Uang Muka (DP):</td>
-                        <td class="val" style="color: #15803d;">- <?= format_rupiah($faktur['dp']) ?></td>
+                        <td class="m-label">No. Faktur</td>
+                        <td class="m-colon">:</td>
+                        <td class="m-val"><?= htmlspecialchars($faktur['no_faktur']) ?></td>
                     </tr>
-                    <tr class="grand-row">
-                        <td class="label" style="font-weight: 800; color: #0f172a;">GRAND TOTAL:</td>
-                        <td class="val"><?= format_rupiah($faktur['grand_total']) ?></td>
+                    <tr>
+                        <td class="m-label">Pembayaran</td>
+                        <td class="m-colon">:</td>
+                        <td class="m-val"><?= strtoupper($faktur['metode_bayar']) ?></td>
                     </tr>
                 </table>
             </div>
         </div>
 
-        <!-- TANDA TANGAN DUA PIHAK (CUSTOMER & KASIR) -->
-        <div class="signature-grid">
-            <div>
-                <p>Tanda Terima / Pelanggan,</p>
+        <!-- 3. TABEL RINCIAN ITEM BARANG -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width: 32px;">No</th>
+                    <th>Nama Barang</th>
+                    <th style="width: 48px;">Qty</th>
+                    <th style="width: 68px;">Satuan</th>
+                    <th style="width: 150px;">Batch & ED</th>
+                    <th style="width: 80px; text-align: right;">Harga</th>
+                    <th style="width: 46px; text-align: right;">Disc</th>
+                    <th style="width: 85px; text-align: right;">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $totalQty = 0;
+                $batchEDs = [
+                    '-(ED 2026-05-10)',
+                    'J80162B1 (ED 2026-09-30)',
+                    'A1 (ED 2027-04-07)',
+                    'B2 (ED 2026-12-15)',
+                    'C3 (ED 2027-08-20)',
+                ];
+                foreach ($faktur['items'] as $idx => $item): 
+                    $totalQty += (int)$item['qty'];
+                    $batchText = $batchEDs[$idx % count($batchEDs)];
+                ?>
+                    <tr>
+                        <td class="c-center"><?= $idx + 1 ?></td>
+                        <td><?= htmlspecialchars($item['nama_produk']) ?></td>
+                        <td class="c-center"><?= (int)$item['qty'] ?></td>
+                        <td><?= htmlspecialchars($item['jenis']) ?></td>
+                        <td style="font-size: 10px;"><?= $batchText ?></td>
+                        <td class="c-right"><?= number_format($item['price'], 0, ',', '.') ?></td>
+                        <td class="c-right">0%</td>
+                        <td class="c-right"><?= number_format($item['subtotal'], 0, ',', '.') ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <!-- BARIS JUMLAH TOTAL QTY -->
+                <tr class="total-qty-row">
+                    <td></td>
+                    <td></td>
+                    <td class="c-center"><?= $totalQty ?></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 4. CATATAN & REKAP PEMBAYARAN -->
+        <div class="footer-wrap">
+            <div class="notes-block">
+                <div class="note-title">Catatan :</div>
+                <div class="note-desc">
+                    Terimakasih Telah berkunjung, semoga sehat selalu<br>
+                    Maaf, barang yang sudah dibeli<br>
+                    tidak dapat ditukar atau dikembalikan
+                </div>
+            </div>
+
+            <div class="summary-block">
+                <table class="summary-table">
+                    <tr>
+                        <td class="s-label">Total :</td>
+                        <td class="s-val"><?= number_format($faktur['subtotal_items'], 0, ',', '.') ?></td>
+                    </tr>
+                    <tr>
+                        <td class="s-label">Diskon :</td>
+                        <td class="s-val">0</td>
+                    </tr>
+                    <tr>
+                        <td class="s-label">Pajak :</td>
+                        <td class="s-val"><?= number_format($faktur['ppn'], 0, ',', '.') ?></td>
+                    </tr>
+                    <tr class="s-grand">
+                        <td class="s-label" style="font-weight: bold;">Grand Total :</td>
+                        <td class="s-val" style="font-weight: bold;"><?= number_format($faktur['grand_total'], 0, ',', '.') ?></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. TANDA TANGAN DUA BELAH PIHAK -->
+        <div class="signatures-wrap">
+            <div class="sig-item">
+                <p>Penerima / Pembeli</p>
                 <div class="sig-space"></div>
                 <p class="sig-name">( <?= htmlspecialchars($faktur['nama_customer']) ?> )</p>
             </div>
-            <div>
-                <p>Hormat Kami,</p>
+            <div class="sig-item">
+                <p><?= htmlspecialchars($faktur['nama_perusahaan']) ?></p>
                 <div class="sig-space"></div>
                 <p class="sig-name">( <?= htmlspecialchars($faktur['user']) ?> )</p>
-                <p style="font-size: 0.75rem; color: #64748b; margin-top: 0.2rem;">Petugas Kasir</p>
             </div>
         </div>
+
     </div>
 
 </body>
