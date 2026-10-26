@@ -40,14 +40,15 @@ try {
     echo "[3/4] Melakukan seeding akun pengguna sistem...\n";
     $stmtUser = $pdo->prepare("INSERT INTO `users` (`username`, `password`, `nama_lengkap`, `role`) VALUES (:u, :p, :n, :r)");
     $users = [
-        ['u' => 'admin',   'p' => password_hash('admin123', PASSWORD_BCRYPT),   'n' => 'Administrator Toko',   'r' => 'admin'],
-        ['u' => 'kasir',   'p' => password_hash('kasir123', PASSWORD_BCRYPT),   'n' => 'Petugas Kasir 1',      'r' => 'petugas'],
-        ['u' => 'manajer', 'p' => password_hash('manajer123', PASSWORD_BCRYPT), 'n' => 'Manajer Operasional',  'r' => 'manajer'],
+        ['u' => 'admin',   'p' => password_hash('password', PASSWORD_BCRYPT),   'n' => 'Administrator Toko',   'r' => 'admin'],
+        ['u' => 'petugas', 'p' => password_hash('password', PASSWORD_BCRYPT),   'n' => 'Petugas Kasir 1',      'r' => 'petugas'],
+        ['u' => 'kasir',   'p' => password_hash('password', PASSWORD_BCRYPT),   'n' => 'Petugas Kasir 2',      'r' => 'petugas'],
+        ['u' => 'manajer', 'p' => password_hash('password', PASSWORD_BCRYPT),   'n' => 'Manajer Operasional',  'r' => 'manajer'],
     ];
     foreach ($users as $u) {
         $stmtUser->execute($u);
     }
-    echo "      -> 3 Akun Pengguna siap (admin/admin123, kasir/kasir123, manajer/manajer123).\n\n";
+    echo "      -> Akun Pengguna siap (admin, petugas, kasir, manajer | password: password).\n\n";
 
     // 4. Seeding Data Uji Coba (Ketentuan: 5 Master Data & 2 Transaksi)
     echo "[4/4] Melakukan seeding data uji coba (5 Master Data & 2 Transaksi)...\n";

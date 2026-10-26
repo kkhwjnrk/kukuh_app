@@ -10,7 +10,7 @@ return [
     'system_title' => 'Sistem Informasi Apotek LSP',
     'app_name'     => 'Apotek LSP',
     'tagline'      => 'Aplikasi Pengelolaan Faktur & Penjualan Apotek',
-    'organization' => 'LSP Universitas Pamulang / BNSP',
+    'organization' => 'Apotek LSP',
 
     // Entitas Perusahaan
     'perusahaan' => [

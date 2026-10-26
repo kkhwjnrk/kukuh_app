@@ -43,9 +43,23 @@
         <div class="nav-section-title">Transaksi Penjualan</div>
 
         <!-- 5. Kelola Data Penjualan (Faktur) -->
-        <a href="<?= url('/faktur') ?>" class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/faktur') !== false ? 'active' : '' ?>">
+        <a href="<?= url('/faktur') ?>" class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], '/faktur') !== false && strpos($_SERVER['REQUEST_URI'], '/reports') === false) ? 'active' : '' ?>">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
             <span>Faktur Penjualan</span>
+        </a>
+
+        <div class="nav-section-title">Laporan & Rekapitulasi</div>
+
+        <!-- 6. Laporan Penjualan -->
+        <a href="<?= url('/reports/penjualan') ?>" class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/reports/penjualan') !== false ? 'active' : '' ?>">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <span>Laporan Penjualan</span>
+        </a>
+
+        <!-- 7. Laporan Produk -->
+        <a href="<?= url('/reports/produk') ?>" class="nav-link <?= strpos($_SERVER['REQUEST_URI'], '/reports/produk') !== false ? 'active' : '' ?>">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <span>Laporan Produk</span>
         </a>
 
         <?php if (has_role('admin')): ?>

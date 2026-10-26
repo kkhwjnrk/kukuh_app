@@ -72,9 +72,18 @@ Router::get('/users/edit/{id}', 'UserController@edit', ['auth', 'role:admin']);
 Router::post('/users/update/{id}', 'UserController@update', ['auth', 'role:admin']);
 Router::post('/users/delete/{id}', 'UserController@delete', ['auth', 'role:admin']);
 
-// 8. Rute Alias untuk Kompatibilitas
+// 8. Modul Laporan (Laporan Penjualan & Laporan Produk)
+Router::get('/reports', 'ReportController@penjualan', ['auth']);
+Router::get('/reports/penjualan', 'ReportController@penjualan', ['auth']);
+Router::get('/reports/penjualan/excel', 'ReportController@exportPenjualanExcel', ['auth']);
+Router::get('/reports/penjualan/print', 'ReportController@printPenjualan', ['auth']);
+
+Router::get('/reports/produk', 'ReportController@produk', ['auth']);
+Router::get('/reports/produk/excel', 'ReportController@exportProdukExcel', ['auth']);
+Router::get('/reports/produk/print', 'ReportController@printProduk', ['auth']);
+
+// 9. Rute Alias untuk Kompatibilitas
 Router::get('/items', function() { Response::redirect('/produk'); });
 Router::get('/categories', function() { Response::redirect('/perusahaan'); });
 Router::get('/transactions', function() { Response::redirect('/faktur'); });
 Router::get('/transactions/create', function() { Response::redirect('/faktur/create'); });
-Router::get('/reports', function() { Response::redirect('/faktur'); });
