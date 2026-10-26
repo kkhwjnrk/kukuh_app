@@ -2,33 +2,55 @@
 
 namespace Tests\Unit;
 
-use App\Models\Category;
-use App\Models\Item;
-use App\Models\Transaction;
+use App\Models\Customer;
+use App\Models\Faktur;
+use App\Models\Perusahaan;
+use App\Models\Produk;
 use Tests\TestRunner;
 
 class ModelTest
 {
-    public function testCategoryCount(TestRunner $runner): void
+    public function testPerusahaanData(TestRunner $runner): void
     {
-        $catModel = new Category();
-        $categories = $catModel->all();
-        $runner->assertTrue(is_array($categories), "Kategori harus mengembalikan array");
-        $runner->assertTrue(count($categories) >= 3, "Minimal harus ada 3 kategori terpasang dari seeder");
+        $perusahaanModel = new Perusahaan();
+        $count = $perusahaanModel->count();
+        $runner->assertTrue($count >= 5, "Tabel perusahaan harus memiliki minimal 5 data sesuai ketentuan ujikom (Ditemukan: {$count})");
     }
 
-    public function testItemCodeGeneration(TestRunner $runner): void
+    public function testCustomerData(TestRunner $runner): void
     {
-        $itemModel = new Item();
-        $code = $itemModel->generateCode('ITM');
-        $runner->assertTrue(strpos($code, 'ITM-') === 0, "Kode item harus diawali dengan ITM-");
+        $customerModel = new Customer();
+        $count = $customerModel->count();
+        $runner->assertTrue($count >= 5, "Tabel customer harus memiliki minimal 5 data sesuai ketentuan ujikom (Ditemukan: {$count})");
     }
 
-    public function testTransactionCodeGeneration(TestRunner $runner): void
+    public function testProdukData(TestRunner $runner): void
     {
-        $transModel = new Transaction();
-        $code = $transModel->generateCode('TRX');
+        $produkModel = new Produk();
+        $count = $produkModel->count();
+        $runner->assertTrue($count >= 5, "Tabel produk harus memiliki minimal 5 data sesuai ketentuan ujikom (Ditemukan: {$count})");
+
+        $lowStock = $produkModel->getLowStock(100);
+        $runner->assertTrue(is_array($lowStock), "Fungsi getLowStock harus mengembalikan array");
+    }
+
+    public function testFakturGenerationAndRelations(TestRunner $runner): void
+    {
+        $fakturModel = new Faktur();
+        $code = $fakturModel->generateNoFaktur('FK');
         $dateStr = date('Ymd');
-        $runner->assertTrue(strpos($code, "TRX-{$dateStr}-") === 0, "Kode transaksi harus memuat tanggal hari ini");
+        $runner->assertTrue(strpos($code, "FK-{$dateStr}-") === 0, "Nomor Faktur harus berformat FK-YYYYMMDD-XXXX (Ditemukan: {$code})");
+
+        $fakturList = $fakturModel->all();
+        $runner->assertTrue(count($fakturList) >= 2, "Tabel faktur harus memiliki minimal 2 data transaksi sesuai ketentuan ujikom");
+
+        if (!empty($fakturList)) {
+            $firstNo = $fakturList[0]['no_faktur'];
+            $detail = $fakturModel->findWithDetails($firstNo);
+            $runner->assertTrue($detail !== false, "Faktur findWithDetails harus menemukan data faktur {$firstNo}");
+            $runner->assertTrue(!empty($detail['nama_customer']), "Faktur harus berhasil di-join dengan tabel customer");
+            $runner->assertTrue(!empty($detail['nama_perusahaan']), "Faktur harus berhasil di-join dengan tabel perusahaan");
+            $runner->assertTrue(is_array($detail['items']) && count($detail['items']) > 0, "Faktur harus memuat rincian produk dari tabel detail_faktur");
+        }
     }
 }

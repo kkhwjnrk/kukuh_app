@@ -136,6 +136,36 @@ class Request
     }
 
     /**
+     * Mengambil parameter query string (GET).
+     *
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function query(?string $key = null, $default = null)
+    {
+        if ($key === null) {
+            return $this->getData;
+        }
+        return $this->getData[$key] ?? $default;
+    }
+
+    /**
+     * Mengambil parameter formulir (POST).
+     *
+     * @param string|null $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function post(?string $key = null, $default = null)
+    {
+        if ($key === null) {
+            return $this->postData;
+        }
+        return $this->postData[$key] ?? $default;
+    }
+
+    /**
      * Mengambil seluruh data input gabungan POST dan GET.
      *
      * @return array

@@ -38,13 +38,14 @@ abstract class Model
     /**
      * Mengambil seluruh record dari tabel.
      *
-     * @param string $orderBy
+     * @param string|null $orderBy Kolom pengurutan (default: primaryKey)
      * @param string $direction
      * @return array
      */
-    public function all(string $orderBy = 'id', string $direction = 'DESC'): array
+    public function all(?string $orderBy = null, string $direction = 'DESC'): array
     {
-        $sql = "SELECT * FROM `{$this->table}` ORDER BY `{$orderBy}` {$direction}";
+        $orderCol = $orderBy ?? $this->primaryKey;
+        $sql = "SELECT * FROM `{$this->table}` ORDER BY `{$orderCol}` {$direction}";
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }
@@ -180,9 +181,10 @@ abstract class Model
         int $perPage = 10,
         ?string $whereSql = null,
         array $params = [],
-        string $orderBy = 'id',
+        ?string $orderBy = null,
         string $direction = 'DESC'
     ): array {
+        $orderCol = $orderBy ?? $this->primaryKey;
         $total = $this->count($whereSql, $params);
         $lastPage = max(1, (int)ceil($total / $perPage));
         $page = max(1, min($page, $lastPage));
@@ -192,7 +194,7 @@ abstract class Model
         if ($whereSql) {
             $sql .= " WHERE {$whereSql}";
         }
-        $sql .= " ORDER BY `{$orderBy}` {$direction} LIMIT {$perPage} OFFSET {$offset}";
+        $sql .= " ORDER BY `{$orderCol}` {$direction} LIMIT {$perPage} OFFSET {$offset}";
 
         $stmt = $this->db->prepare($sql);
         foreach ($params as $key => $val) {

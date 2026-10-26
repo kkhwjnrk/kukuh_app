@@ -1,83 +1,94 @@
 -- ==============================================================
--- STRUKTUR BASIS DATA SIM-PRO (STANDAR SKKNI J.620100.021.02)
--- Relasi Antar-Tabel, Foreign Key Constraints, dan Indexing Optimal
+-- STRUKTUR BASIS DATA SISTEM FAKTUR PENJUALAN
+-- Standar Uji Kompetensi LSP Programmer (FR.IA.04A)
+-- Sesuai Diagram Logical Record Structure (LRS)
 -- ==============================================================
 
 CREATE DATABASE IF NOT EXISTS `kukuh_app_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `kukuh_app_db`;
 
--- 1. TABEL PENGGUNA (USERS)
+-- Hapus tabel lama jika ada (urutan child ke parent)
+DROP TABLE IF EXISTS `detail_faktur`;
+DROP TABLE IF EXISTS `faktur`;
+DROP TABLE IF EXISTS `produk`;
+DROP TABLE IF EXISTS `customer`;
+DROP TABLE IF EXISTS `perusahaan`;
 DROP TABLE IF EXISTS `transaction_details`;
 DROP TABLE IF EXISTS `transactions`;
 DROP TABLE IF EXISTS `items`;
 DROP TABLE IF EXISTS `categories`;
 DROP TABLE IF EXISTS `users`;
 
+-- 1. TABEL PENGGUNA (UNTUK AUTENTIKASI LOGIN ADMIN/PETUGAS)
 CREATE TABLE `users` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(50) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `nama_lengkap` VARCHAR(100) NOT NULL,
-    `role` ENUM('admin', 'petugas', 'manajer') NOT NULL DEFAULT 'petugas',
-    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX `idx_users_role` (`role`)
+    `role` ENUM('admin', 'petugas', 'manajer') NOT NULL DEFAULT 'admin',
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 2. TABEL KATEGORI (CATEGORIES)
-CREATE TABLE `categories` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `nama_kategori` VARCHAR(100) NOT NULL,
-    `deskripsi` TEXT NULL,
+-- 2. TABEL PERUSAHAAN (SESUAI LRS)
+CREATE TABLE `perusahaan` (
+    `id_perusahaan` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `nama_perusahaan` VARCHAR(100) NOT NULL,
+    `alamat` TEXT NOT NULL,
+    `no_telp` VARCHAR(25) NOT NULL,
+    `fax` VARCHAR(25) NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX `idx_categories_nama` (`nama_kategori`)
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. TABEL ITEM / PRODUK / MASTER DATA (ITEMS)
-CREATE TABLE `items` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `kode_item` VARCHAR(50) NOT NULL UNIQUE,
-    `nama_item` VARCHAR(150) NOT NULL,
-    `category_id` INT UNSIGNED NOT NULL,
-    `harga` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
-    `stok` INT NOT NULL DEFAULT 0,
-    `gambar` VARCHAR(255) NULL,
-    `deskripsi` TEXT NULL,
+-- 3. TABEL CUSTOMER (SESUAI LRS)
+CREATE TABLE `customer` (
+    `id_customer` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `nama_customer` VARCHAR(100) NOT NULL,
+    `perusahaan_cust` VARCHAR(100) NULL,
+    `alamat` TEXT NOT NULL,
+    `no_telp` VARCHAR(25) NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`category_id`) REFERENCES `categories`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
-    INDEX `idx_items_kode` (`kode_item`),
-    INDEX `idx_items_nama` (`nama_item`)
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 4. TABEL TRANSAKSI UTAMA (TRANSACTIONS)
-CREATE TABLE `transactions` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `kode_transaksi` VARCHAR(50) NOT NULL UNIQUE,
-    `tanggal` DATE NOT NULL,
-    `user_id` INT UNSIGNED NOT NULL,
-    `nama_pelanggan` VARCHAR(100) NOT NULL DEFAULT 'Umum',
-    `total_bayar` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
-    `status` ENUM('selesai', 'pending', 'batal') NOT NULL DEFAULT 'selesai',
-    `catatan` TEXT NULL,
+-- 4. TABEL PRODUK (SESUAI LRS)
+CREATE TABLE `produk` (
+    `id_produk` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `nama_produk` VARCHAR(150) NOT NULL,
+    `price` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    `jenis` VARCHAR(50) NOT NULL,
+    `stock` INT NOT NULL DEFAULT 0,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE CASCADE,
-    INDEX `idx_transactions_kode` (`kode_transaksi`),
-    INDEX `idx_transactions_tanggal` (`tanggal`),
-    INDEX `idx_transactions_status` (`status`)
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 5. TABEL RINCIAN TRANSAKSI (TRANSACTION_DETAILS)
-CREATE TABLE `transaction_details` (
-    `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    `transaction_id` INT UNSIGNED NOT NULL,
-    `item_id` INT UNSIGNED NOT NULL,
-    `harga_satuan` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+-- 5. TABEL FAKTUR (SESUAI LRS)
+CREATE TABLE `faktur` (
+    `no_faktur` VARCHAR(50) PRIMARY KEY,
+    `tgl_faktur` DATE NOT NULL,
+    `due_date` DATE NOT NULL,
+    `metode_bayar` VARCHAR(30) NOT NULL DEFAULT 'TUNAI',
+    `ppn` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    `dp` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    `grand_total` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    `user` VARCHAR(50) NOT NULL,
+    `id_customer` INT UNSIGNED NOT NULL,
+    `id_perusahaan` INT UNSIGNED NOT NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`id_customer`) REFERENCES `customer`(`id_customer`) ON UPDATE CASCADE,
+    FOREIGN KEY (`id_perusahaan`) REFERENCES `perusahaan`(`id_perusahaan`) ON UPDATE CASCADE,
+    INDEX `idx_faktur_tgl` (`tgl_faktur`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 6. TABEL DETAIL FAKTUR (SESUAI LRS)
+CREATE TABLE `detail_faktur` (
+    `id_detail` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `no_faktur` VARCHAR(50) NOT NULL,
+    `id_produk` INT UNSIGNED NOT NULL,
     `qty` INT NOT NULL DEFAULT 1,
-    `subtotal` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
+    `price` DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`transaction_id`) REFERENCES `transactions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`item_id`) REFERENCES `items`(`id`) ON UPDATE CASCADE
+    FOREIGN KEY (`no_faktur`) REFERENCES `faktur`(`no_faktur`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`id_produk`) REFERENCES `produk`(`id_produk`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

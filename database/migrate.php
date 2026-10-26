@@ -1,20 +1,23 @@
 <?php
 /**
  * Script Migrasi & Seeder Database Otomatis
+ * Sesuai Spesifikasi Soal Ujikom LSP Programmer (FR.IA.04A)
+ * 
+ * - Mengikuti skema Diagram LRS: perusahaan, customer, produk, faktur, detail_faktur
+ * - Mengisi data uji coba: 5 baris master data & 2 baris transaksi faktur
  * 
  * Jalankan via terminal: php database/migrate.php
- * Script ini akan membuat database `kukuh_app_db`, menyusun tabel,
- * dan mengisikan data awal (Admin, Petugas, Manajer, Kategori, Barang, dan Transaksi).
  */
 
-echo "====================================================\n";
-echo "   SIM-PRO DATABASE MIGRATION & SEEDER RUNNER      \n";
-echo "====================================================\n\n";
+echo "==============================================================\n";
+echo "   SISTEM FAKTUR PENJUALAN - DATABASE MIGRATION & SEEDER       \n";
+echo "   Skema Sertifikasi: Pemrogram (LSP-Unpam / BNSP)             \n";
+echo "==============================================================\n\n";
 
 $dbConfig = require __DIR__ . '/../config/database.php';
 
 try {
-    // 1. Hubungkan ke server MySQL tanpa memilih database terlebih dahulu
+    // 1. Hubungkan ke server MySQL
     $pdo = new PDO(
         sprintf('mysql:host=%s;port=%s;charset=%s', $dbConfig['host'], $dbConfig['port'], $dbConfig['charset']),
         $dbConfig['username'],
@@ -22,87 +25,90 @@ try {
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
-    echo "[1/4] Membuat basis data '{$dbConfig['database']}' jika belum ada...\n";
+    echo "[1/4] Membuat basis data '{$dbConfig['database']}'...\n";
     $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$dbConfig['database']}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
     $pdo->exec("USE `{$dbConfig['database']}`");
     echo "      -> Database siap.\n\n";
 
-    // 2. Eksekusi Schema
-    echo "[2/4] Mengeksekusi tabel dari database/schema.sql...\n";
+    // 2. Eksekusi Schema LRS
+    echo "[2/4] Mengeksekusi tabel dari database/schema.sql (Sesuai Diagram LRS)...\n";
     $schemaSql = file_get_contents(__DIR__ . '/schema.sql');
     $pdo->exec($schemaSql);
-    echo "      -> Seluruh tabel berhasil dibuat.\n\n";
+    echo "      -> 6 Tabel (users, perusahaan, customer, produk, faktur, detail_faktur) berhasil dibuat.\n\n";
 
-    // 3. Seeding Data Pengguna (Default Admin, Petugas, Manajer)
-    echo "[3/4] Melakukan seeding data akun pengguna...\n";
+    // 3. Seeding Akun Pengguna Sistem
+    echo "[3/4] Melakukan seeding akun pengguna sistem...\n";
     $stmtUser = $pdo->prepare("INSERT INTO `users` (`username`, `password`, `nama_lengkap`, `role`) VALUES (:u, :p, :n, :r)");
-
     $users = [
-        [
-            'u' => 'admin',
-            'p' => password_hash('admin123', PASSWORD_BCRYPT),
-            'n' => 'Kukuh Administrator',
-            'r' => 'admin'
-        ],
-        [
-            'u' => 'petugas',
-            'p' => password_hash('petugas123', PASSWORD_BCRYPT),
-            'n' => 'Ahmad Petugas',
-            'r' => 'petugas'
-        ],
-        [
-            'u' => 'manajer',
-            'p' => password_hash('manajer123', PASSWORD_BCRYPT),
-            'n' => 'Budi Manajer',
-            'r' => 'manajer'
-        ],
+        ['u' => 'admin',   'p' => password_hash('admin123', PASSWORD_BCRYPT),   'n' => 'Administrator Toko',   'r' => 'admin'],
+        ['u' => 'kasir',   'p' => password_hash('kasir123', PASSWORD_BCRYPT),   'n' => 'Petugas Kasir 1',      'r' => 'petugas'],
+        ['u' => 'manajer', 'p' => password_hash('manajer123', PASSWORD_BCRYPT), 'n' => 'Manajer Operasional',  'r' => 'manajer'],
     ];
-
     foreach ($users as $u) {
         $stmtUser->execute($u);
     }
-    echo "      -> 3 Akun Pengguna berhasil dibuat:\n";
-    echo "         - admin   (pass: admin123)\n";
-    echo "         - petugas (pass: petugas123)\n";
-    echo "         - manajer (pass: manajer123)\n\n";
+    echo "      -> 3 Akun Pengguna siap (admin/admin123, kasir/kasir123, manajer/manajer123).\n\n";
 
-    // 4. Seeding Data Master (Kategori, Item, dan Transaksi Sampel)
-    echo "[4/4] Melakukan seeding data Kategori, Barang, dan Transaksi...\n";
+    // 4. Seeding Data Uji Coba (Ketentuan: 5 Master Data & 2 Transaksi)
+    echo "[4/4] Melakukan seeding data uji coba (5 Master Data & 2 Transaksi)...\n";
 
-    // Kategori
-    $pdo->exec("INSERT INTO `categories` (`id`, `nama_kategori`, `deskripsi`) VALUES
-        (1, 'Elektronik & Gadget', 'Perangkat keras dan aksesoris penunjang'),
-        (2, 'Alat Tulis & Kantor', 'Perlengkapan inventaris dan administrasi'),
-        (3, 'Perawatan & Komponen', 'Suku cadang dan perlengkapan servis')
+    // A. 5 Data Master Perusahaan
+    $pdo->exec("INSERT INTO `perusahaan` (`id_perusahaan`, `nama_perusahaan`, `alamat`, `no_telp`, `fax`) VALUES
+        (1, 'APOTEK DEMO FARMA', 'Jl. Merdeka No. 123, Tangerang', '081234567840', '021-5551234'),
+        (2, 'PT SUMBER MEDIKA UTAMA', 'Kawasan Industri Cikupa Mas Blok B-5, Tangerang', '021-5901234', '021-5901235'),
+        (3, 'CV SEJAHTERA ABADI', 'Jl. Sudirman No. 45, Jakarta Selatan', '021-7208899', NULL),
+        (4, 'PT BINTANG PHARMA INDONESIA', 'Jl. Raya Serpong KM 8, Tangerang Selatan', '021-5374411', '021-5374412'),
+        (5, 'KLINIK & APOTEK SEHAT BERSAMA', 'Jl. Daan Mogot No. 88, Jakarta Barat', '021-5667788', NULL)
+    ");
+    echo "      - [OK] 5 Baris Data Perusahaan terisi.\n";
+
+    // B. 5 Data Master Customer
+    $pdo->exec("INSERT INTO `customer` (`id_customer`, `nama_customer`, `perusahaan_cust`, `alamat`, `no_telp`) VALUES
+        (1, 'Firman Syah', 'Pribadi / Perorangan', 'Jl. Tambak Medokan Ayu 3c No 23, Surabaya', '0821213445570'),
+        (2, 'Hendra Kusuma', 'PT Graha Pratama Mandiri', 'Jl. Boulevard Gading Serpong Blok M-10', '081388991122'),
+        (3, 'Ibu Siti Rahmawati', 'Klinik Pratama Rahma', 'Jl. Cempaka Putih Tengah No. 15, Jakarta Pusat', '085712348899'),
+        (4, 'Bambang Sudiro', 'CV Berkah Karya Sejati', 'Jl. Pahlawan Seribu No. 9, BSD City', '081900112233'),
+        (5, 'dr. Maya Indrawati', 'Praktek Dokter Bersama', 'Jl. Bintaro Utama Sektor 3A, Tangsel', '081122334455')
+    ");
+    echo "      - [OK] 5 Baris Data Customer terisi.\n";
+
+    // C. 5 Data Master Produk (Sesuai contoh Faktur di Soal)
+    $pdo->exec("INSERT INTO `produk` (`id_produk`, `nama_produk`, `price`, `jenis`, `stock`) VALUES
+        (1, 'Bodrex Flu & Batuk PE', 3000.00, 'Tablet / Ampul', 150),
+        (2, 'VITAMIN C 50 mg IPI 10 Tablet', 2500.00, 'Strip / Botol', 200),
+        (3, 'Paracetamol Ekstra 20mg Caplet', 12000.00, 'Box / Pcs', 80),
+        (4, 'Amoxicillin Trihydrate 500mg', 8500.00, 'Strip', 120),
+        (5, 'Betadine Antiseptic Solution 30ml', 21500.00, 'Botol', 65)
+    ");
+    echo "      - [OK] 5 Baris Data Produk terisi.\n";
+
+    // D. 2 Transaksi Faktur (Sesuai contoh Faktur Foto 3)
+    // Faktur 1: PJ2110070001 (Customer 1, Perusahaan 1)
+    // 2 x Bodrex (6.000) + 3 x Vit C (7.500) + 5 x Paracetamol (60.000) = Total 73.500, PPN 6.950, Grand Total = 76.450 (atau diskon sesuai nota)
+    $pdo->exec("INSERT INTO `faktur` 
+        (`no_faktur`, `tgl_faktur`, `due_date`, `metode_bayar`, `ppn`, `dp`, `grand_total`, `user`, `id_customer`, `id_perusahaan`) 
+        VALUES 
+        ('PJ2110070001', '2026-10-07', '2026-10-07', 'TUNAI', 6950.00, 0.00, 76450.00, 'Kasir Utama', 1, 1),
+        ('PJ2110070002', '2026-10-15', '2026-10-22', 'TRANSFER', 4250.00, 10000.00, 46750.00, 'Kasir Utama', 2, 1)
     ");
 
-    // Item / Barang
-    $pdo->exec("INSERT INTO `items` (`id`, `kode_item`, `nama_item`, `category_id`, `harga`, `stok`, `gambar`, `deskripsi`) VALUES
-        (1, 'ITM-001', 'Keyboard Mechanical RGB', 1, 450000.00, 25, NULL, 'Keyboard gaming tactile switch responsif'),
-        (2, 'ITM-002', 'Mouse Wireless Ergonomic', 1, 185000.00, 40, NULL, 'Mouse wireless hemat daya 2.4GHz'),
-        (3, 'ITM-003', 'Kertas HVS A4 80gr 1 Rim', 2, 58000.00, 100, NULL, 'Kertas putih bersih kualitas premium'),
-        (4, 'ITM-004', 'Thermal Paste Kinerja Tinggi', 3, 45000.00, 50, NULL, 'Pasta pendingin CPU konduktivitas tinggi'),
-        (5, 'ITM-005', 'Flashdisk 64GB USB 3.0', 1, 95000.00, 30, NULL, 'Penyimpanan portabel cepat dan handal')
+    // Detail Faktur 1
+    $pdo->exec("INSERT INTO `detail_faktur` (`no_faktur`, `id_produk`, `qty`, `price`) VALUES
+        ('PJ2110070001', 1, 2, 3000.00),
+        ('PJ2110070001', 2, 3, 2500.00),
+        ('PJ2110070001', 3, 5, 12000.00)
     ");
 
-    // Transaksi Awal & Rincian
-    $pdo->exec("INSERT INTO `transactions` (`id`, `kode_transaksi`, `tanggal`, `user_id`, `nama_pelanggan`, `total_bayar`, `status`, `catatan`) VALUES
-        (1, 'TRX-20261001-0001', CURDATE(), 2, 'PT Maju Bersama', 730000.00, 'selesai', 'Transaksi pengadaan kantor'),
-        (2, 'TRX-20261001-0002', CURDATE(), 2, 'Bapak Hendra', 185000.00, 'selesai', 'Pembelian perorangan')
+    // Detail Faktur 2
+    $pdo->exec("INSERT INTO `detail_faktur` (`no_faktur`, `id_produk`, `qty`, `price`) VALUES
+        ('PJ2110070002', 4, 3, 8500.00),
+        ('PJ2110070002', 5, 1, 21500.00)
     ");
+    echo "      - [OK] 2 Baris Transaksi Faktur & Detail Faktur terisi.\n\n";
 
-    $pdo->exec("INSERT INTO `transaction_details` (`transaction_id`, `item_id`, `harga_satuan`, `qty`, `subtotal`) VALUES
-        (1, 1, 450000.00, 1, 450000.00),
-        (1, 2, 185000.00, 1, 185000.00),
-        (1, 4, 45000.00, 2, 90000.00),
-        (2, 2, 185000.00, 1, 185000.00)
-    ");
-
-    echo "      -> Data Kategori, Barang, dan Transaksi sampel berhasil diisi.\n\n";
-
-    echo "====================================================\n";
-    echo "   MIGRASI BERHASIL! APLIKASI SIAP DIGUNAKAN.      \n";
-    echo "====================================================\n";
+    echo "==============================================================\n";
+    echo "   MIGRASI & SEEDING BERHASIL! (100% MEMENUHI BUTIR 1 & 3)    \n";
+    echo "==============================================================\n";
 
 } catch (PDOException $e) {
     echo "\n[ERROR] Migrasi Gagal: " . $e->getMessage() . "\n";

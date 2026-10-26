@@ -194,4 +194,17 @@ class Validator
     {
         return $this->errors[$field] ?? null;
     }
+
+    /**
+     * Mengambil pesan error pertama dari kumpulan seluruh error.
+     *
+     * @return string
+     */
+    public function firstError(): string
+    {
+        if (empty($this->errors)) {
+            return 'Terjadi kesalahan validasi input.';
+        }
+        return reset($this->errors);
+    }
 }
