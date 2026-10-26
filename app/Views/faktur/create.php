@@ -5,12 +5,12 @@
         <div>
             <h1 style="font-size: 1.5rem; font-weight: 700; color: #0f172a;">Tambah Faktur Penjualan Baru</h1>
             <p style="font-size: 0.85rem; color: #64748b; margin-top: 0.25rem;">
-                Terbitkan faktur penjualan resmi dengan kalkulasi multi-produk otomatis dan pemotongan stok ACID.
+                Terbitkan faktur penjualan resmi dengan kalkulasi multi-produk otomatis, jatuh tempo cerdas, dan pemotongan stok ACID.
             </p>
         </div>
-        <div style="display: flex; gap: 0.5rem;">
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
             <a href="<?= url('/faktur') ?>" class="btn btn-secondary">Batal / Kembali</a>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" id="btnSubmitTop" disabled style="opacity: 0.6; cursor: not-allowed;">
                 <svg fill="none" stroke="currentColor" width="18" height="18" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 <span>Terbitkan Faktur</span>
             </button>
@@ -63,22 +63,23 @@
                     <input type="date" name="tgl_faktur" id="tgl_faktur" class="form-control" value="<?= date('Y-m-d') ?>" required>
                 </div>
 
-                <!-- Jatuh Tempo (Due Date) -->
-                <div class="form-group">
-                    <label class="form-label" for="due_date">Jatuh Tempo (Due Date) <span style="color: var(--danger);">*</span></label>
-                    <input type="date" name="due_date" id="due_date" class="form-control" value="<?= date('Y-m-d', strtotime('+14 days')) ?>" required>
-                </div>
-
                 <!-- Metode Pembayaran -->
                 <div class="form-group">
                     <label class="form-label" for="metode_bayar">Metode Pembayaran <span style="color: var(--danger);">*</span></label>
                     <select name="metode_bayar" id="metode_bayar" class="form-select" required>
-                        <option value="Tunai / Cash">Tunai / Cash</option>
-                        <option value="Transfer Bank BCA">Transfer Bank BCA</option>
-                        <option value="Transfer Bank Mandiri">Transfer Bank Mandiri</option>
-                        <option value="Tempo 14 Hari" selected>Tempo 14 Hari</option>
-                        <option value="Tempo 30 Hari">Tempo 30 Hari</option>
+                        <option value="TUNAI" selected>TUNAI (Cash)</option>
+                        <option value="TRANSFER">TRANSFER (Bank)</option>
+                        <option value="TEMPO 7 HARI">TEMPO 7 HARI</option>
+                        <option value="TEMPO 14 HARI">TEMPO 14 HARI</option>
+                        <option value="TEMPO 30 HARI">TEMPO 30 HARI</option>
                     </select>
+                    <small style="color: #2563eb; font-size: 0.75rem;">Jatuh tempo otomatis terhitung dari metode pembayaran ini.</small>
+                </div>
+
+                <!-- Jatuh Tempo (Due Date) -->
+                <div class="form-group">
+                    <label class="form-label" for="due_date">Jatuh Tempo (Due Date) <span style="color: var(--danger);">*</span></label>
+                    <input type="date" name="due_date" id="due_date" class="form-control" value="<?= date('Y-m-d') ?>" required>
                 </div>
             </div>
         </div>
@@ -86,7 +87,7 @@
 
     <!-- BAGIAN 2: RINCIAN PRODUK (MULTI-ITEM CART) -->
     <div class="card" style="margin-bottom: 1.5rem;">
-        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div>
                 <h2 class="card-title">2. Rincian Produk & Kuantitas</h2>
                 <p style="font-size: 0.775rem; color: #64748b; margin-top: 0.2rem;">
@@ -108,11 +109,16 @@
                         <th style="width: 160px; text-align: right;">Harga Satuan (Rp)</th>
                         <th style="width: 120px; text-align: center;">Kuantitas (Qty)</th>
                         <th style="width: 160px; text-align: right;">Subtotal (Rp)</th>
-                        <th style="width: 50px; text-align: center;">Hapus</th>
+                        <th style="width: 50px; text-align: center;">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="itemRowsContainer">
-                    <!-- Baris item akan dimasukkan via JavaScript -->
+                    <!-- Placeholder awal saat belum ada baris produk -->
+                    <tr id="emptyRowPlaceholder">
+                        <td colspan="7" style="text-align: center; color: #94a3b8; padding: 2.25rem;">
+                            Belum ada produk yang dipilih. Silakan klik tombol <strong style="color: #2563eb;">+ Tambah Baris Produk</strong> di atas untuk menambahkan barang ke faktur.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -127,7 +133,7 @@
             <div class="card-body">
                 <p style="font-size: 0.85rem; color: #64748b; line-height: 1.6;">
                     &bull; Faktur ini sah apabila telah diverifikasi dan dicetak dengan tanda tangan kasir dan penerima.<br>
-                    &bull; Barang yang sudah dibeli dan diterima dalam kondisi baik tidak dapat dikembalikan kecuali perjanjian khusus.<br>
+                    &bull; PPN (11%) terhitung otomatis dari total subtotal produk.<br>
                     &bull; Stok produk di database otomatis berkurang secara atomik saat faktur ini disimpan.
                 </p>
             </div>
@@ -144,21 +150,19 @@
                     <strong id="displaySubtotal" style="color: #0f172a; font-size: 1.05rem;">Rp 0</strong>
                 </div>
 
-                <!-- PPN -->
+                <!-- PPN (Otomatis 11%) -->
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                        <label class="form-label" for="ppn" style="margin: 0; font-size: 0.875rem;">PPN (Pajak):</label>
-                        <button type="button" id="btnAutoPPN" class="btn btn-secondary btn-sm" style="font-size: 0.7rem; padding: 0.15rem 0.5rem;">
-                            Hitung 11%
-                        </button>
+                        <label class="form-label" for="ppn" style="margin: 0; font-size: 0.875rem;">PPN (11% Otomatis):</label>
+                        <span class="badge" style="background: #eef2ff; color: #4338ca; font-weight: 600; font-size: 0.725rem;">Otomatis 11%</span>
                     </div>
-                    <input type="number" name="ppn" id="ppn" class="form-control" min="0" step="100" value="0">
+                    <input type="number" name="ppn" id="ppn" class="form-control" value="0" readonly style="background: #f8fafc; font-weight: 600; cursor: not-allowed;">
                 </div>
 
                 <!-- DP (Uang Muka) -->
                 <div>
                     <label class="form-label" for="dp" style="font-size: 0.875rem; margin-bottom: 0.35rem;">Uang Muka / DP (Rp):</label>
-                    <input type="number" name="dp" id="dp" class="form-control" min="0" step="500" value="0">
+                    <input type="number" name="dp" id="dp" class="form-control" min="0" step="500" value="0" oninput="calculateTotals()">
                 </div>
 
                 <div style="border-top: 2px dashed #cbd5e1; margin: 0.5rem 0;"></div>
@@ -169,25 +173,67 @@
                     <strong id="displayGrandTotal" style="color: #2563eb; font-size: 1.4rem;">Rp 0</strong>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.75rem 1rem;">
+                <button type="submit" class="btn btn-primary" id="btnSubmitBottom" disabled style="width: 100%; margin-top: 0.5rem; padding: 0.75rem 1rem; opacity: 0.6; cursor: not-allowed;">
                     Simpan & Terbitkan Faktur
                 </button>
+                <div id="submitWarning" style="text-align: center; color: #dc2626; font-size: 0.75rem;">
+                    * Silakan pilih minimal 1 produk dengan kuantitas valid untuk mengaktifkan tombol simpan.
+                </div>
             </div>
         </div>
     </div>
 </form>
 
-<!-- DATA PRODUK DALAM FORMAT JSON UNTUK JAVASCRIPT -->
 <script>
 const availableProducts = <?= json_encode($produkList) ?>;
-
 let rowCount = 0;
 
+// 1. FUNGSI UPDATE JATUH TEMPO OTOMATIS BERDASARKAN METODE PEMBAYARAN
+function updateDueDate() {
+    const tglFakturVal = document.getElementById('tgl_faktur').value;
+    if (!tglFakturVal) return;
+
+    const metode = document.getElementById('metode_bayar').value.toUpperCase();
+    let daysToAdd = 0;
+
+    if (metode.includes('30')) {
+        daysToAdd = 30;
+    } else if (metode.includes('14')) {
+        daysToAdd = 14;
+    } else if (metode.includes('7')) {
+        daysToAdd = 7;
+    } else if (metode.includes('TRANSFER')) {
+        daysToAdd = 1;
+    } else {
+        daysToAdd = 0; // TUNAI / Cash
+    }
+
+    const parts = tglFakturVal.split('-');
+    const d = new Date(parts[0], parts[1] - 1, parts[2]);
+    d.setDate(d.getDate() + daysToAdd);
+
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+
+    document.getElementById('due_date').value = `${yyyy}-${mm}-${dd}`;
+}
+
+document.getElementById('metode_bayar').addEventListener('change', updateDueDate);
+document.getElementById('tgl_faktur').addEventListener('change', updateDueDate);
+
+// 2. FUNGSI MENAMBAH BARIS PRODUK
 function addProductRow(selectedId = null, initialQty = 1) {
+    const placeholder = document.getElementById('emptyRowPlaceholder');
+    if (placeholder) {
+        placeholder.remove();
+    }
+
     rowCount++;
     const container = document.getElementById('itemRowsContainer');
     const tr = document.createElement('tr');
     tr.id = 'row_' + rowCount;
+    tr.className = 'item-row';
 
     let optionsHtml = '<option value="">-- Pilih Produk --</option>';
     availableProducts.forEach(p => {
@@ -230,11 +276,15 @@ function addProductRow(selectedId = null, initialQty = 1) {
     if (selectedId) {
         const selectElem = tr.querySelector('.product-select');
         onProductChange(selectElem, rowCount);
+    } else {
+        calculateTotals();
     }
 }
 
+// 3. EVENT KETIKA PRODUK DIPILIH
 function onProductChange(selectElem, rowId) {
     const tr = document.getElementById('row_' + rowId);
+    if (!tr) return;
     const selectedOption = selectElem.options[selectElem.selectedIndex];
 
     if (selectElem.value) {
@@ -255,14 +305,23 @@ function onProductChange(selectElem, rowId) {
     calculateTotals();
 }
 
+// 4. MENGHAPUS BARIS PRODUK SECARA BEBAS
 function removeRow(rowId) {
-    const rows = document.querySelectorAll('#itemRowsContainer tr');
-    if (rows.length <= 1) {
-        alert('Minimal harus ada satu baris produk dalam faktur!');
-        return;
-    }
     const tr = document.getElementById('row_' + rowId);
     if (tr) tr.remove();
+
+    const remainingRows = document.querySelectorAll('#itemRowsContainer tr.item-row');
+    if (remainingRows.length === 0) {
+        const container = document.getElementById('itemRowsContainer');
+        container.innerHTML = `
+            <tr id="emptyRowPlaceholder">
+                <td colspan="7" style="text-align: center; color: #94a3b8; padding: 2.25rem;">
+                    Belum ada produk yang dipilih. Silakan klik tombol <strong style="color: #2563eb;">+ Tambah Baris Produk</strong> di atas untuk menambahkan barang ke faktur.
+                </td>
+            </tr>
+        `;
+    }
+
     calculateTotals();
 }
 
@@ -270,11 +329,14 @@ function formatRupiah(number) {
     return 'Rp ' + Number(number).toLocaleString('id-ID');
 }
 
+// 5. KALKULASI TOTALS, AUTO PPN 11%, DAN VALIDASI STATUS TOMBOL SIMPAN
 function calculateTotals() {
     let subtotal = 0;
-    const rows = document.querySelectorAll('#itemRowsContainer tr');
+    let validItemCount = 0;
+    const rows = document.querySelectorAll('#itemRowsContainer tr.item-row');
 
     rows.forEach(tr => {
+        const productSelect = tr.querySelector('.product-select');
         const priceInput = tr.querySelector('.item-price');
         const qtyInput = tr.querySelector('.item-qty');
         const subtotalCell = tr.querySelector('.item-subtotal');
@@ -286,41 +348,59 @@ function calculateTotals() {
         if (subtotalCell) {
             subtotalCell.textContent = formatRupiah(rowSubtotal);
         }
-        subtotal += rowSubtotal;
+
+        if (productSelect && productSelect.value !== '' && qty > 0) {
+            validItemCount++;
+            subtotal += rowSubtotal;
+        }
     });
 
     document.getElementById('displaySubtotal').textContent = formatRupiah(subtotal);
 
-    const ppnInput = parseFloat(document.getElementById('ppn').value) || 0;
+    // Otomatis PPN 11%
+    const ppn = validItemCount > 0 ? Math.round(subtotal * 0.11) : 0;
+    document.getElementById('ppn').value = ppn;
+
+    // DP
     const dpInput = parseFloat(document.getElementById('dp').value) || 0;
 
-    const grandTotal = Math.max(0, subtotal + ppnInput - dpInput);
+    // Grand Total
+    const grandTotal = Math.max(0, subtotal + ppn - dpInput);
     document.getElementById('displayGrandTotal').textContent = formatRupiah(grandTotal);
+
+    // KONTROL TOMBOL SIMPAN (DISABLE BILA TIDAK ADA PRODUK VALID)
+    const btnTop = document.getElementById('btnSubmitTop');
+    const btnBottom = document.getElementById('btnSubmitBottom');
+    const warning = document.getElementById('submitWarning');
+
+    if (validItemCount > 0) {
+        btnTop.disabled = false;
+        btnTop.style.opacity = '1';
+        btnTop.style.cursor = 'pointer';
+
+        btnBottom.disabled = false;
+        btnBottom.style.opacity = '1';
+        btnBottom.style.cursor = 'pointer';
+
+        if (warning) warning.style.display = 'none';
+    } else {
+        btnTop.disabled = true;
+        btnTop.style.opacity = '0.6';
+        btnTop.style.cursor = 'not-allowed';
+
+        btnBottom.disabled = true;
+        btnBottom.style.opacity = '0.6';
+        btnBottom.style.cursor = 'not-allowed';
+
+        if (warning) warning.style.display = 'block';
+    }
 }
 
-// Auto PPN 11%
-document.getElementById('btnAutoPPN').addEventListener('click', function() {
-    let subtotal = 0;
-    document.querySelectorAll('#itemRowsContainer tr').forEach(tr => {
-        const price = parseFloat(tr.querySelector('.item-price')?.value || 0) || 0;
-        const qty = parseInt(tr.querySelector('.item-qty')?.value || 0) || 0;
-        subtotal += (price * qty);
-    });
-    const ppn = Math.round(subtotal * 0.11);
-    document.getElementById('ppn').value = ppn;
-    calculateTotals();
-});
-
-document.getElementById('ppn').addEventListener('input', calculateTotals);
-document.getElementById('dp').addEventListener('input', calculateTotals);
 document.getElementById('btnAddRow').addEventListener('click', () => addProductRow());
 
-// Initialize with one empty product row
+// Initialize pada halaman dimuat
 document.addEventListener('DOMContentLoaded', function() {
-    if (availableProducts.length > 0) {
-        addProductRow(availableProducts[0].id_produk, 2);
-    } else {
-        addProductRow();
-    }
+    updateDueDate();
+    calculateTotals();
 });
 </script>

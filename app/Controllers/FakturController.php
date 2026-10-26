@@ -130,10 +130,10 @@ class FakturController extends Controller
             $this->redirectWithError('/faktur/create', 'Rincian produk tidak valid atau kuantitas 0.');
         }
 
-        // Kalkulasi PPN, DP, dan Grand Total
-        $ppnInput = (float)($request->input('ppn') ?? 0);
+        // Kalkulasi PPN (Otomatis 11%), DP, dan Grand Total
+        $ppn = round($subtotal * 0.11);
         $dpInput = (float)($request->input('dp') ?? 0);
-        $grandTotal = max(0, $subtotal + $ppnInput - $dpInput);
+        $grandTotal = max(0, $subtotal + $ppn - $dpInput);
 
         $currentUser = auth('nama_lengkap') ?? auth('username') ?? 'Admin';
 
@@ -142,7 +142,7 @@ class FakturController extends Controller
             'tgl_faktur'    => $request->input('tgl_faktur'),
             'due_date'      => $request->input('due_date'),
             'metode_bayar'  => trim($request->input('metode_bayar')),
-            'ppn'           => $ppnInput,
+            'ppn'           => $ppn,
             'dp'            => $dpInput,
             'grand_total'   => $grandTotal,
             'user'          => $currentUser,
@@ -257,9 +257,10 @@ class FakturController extends Controller
             $this->redirectWithError("/faktur/edit/{$noFaktur}", 'Rincian produk tidak valid.');
         }
 
-        $ppnInput = (float)($request->input('ppn') ?? 0);
+        // Kalkulasi PPN (Otomatis 11%), DP, dan Grand Total
+        $ppn = round($subtotal * 0.11);
         $dpInput = (float)($request->input('dp') ?? 0);
-        $grandTotal = max(0, $subtotal + $ppnInput - $dpInput);
+        $grandTotal = max(0, $subtotal + $ppn - $dpInput);
 
         $currentUser = auth('nama_lengkap') ?? auth('username') ?? 'Admin';
 
@@ -267,7 +268,7 @@ class FakturController extends Controller
             'tgl_faktur'    => $request->input('tgl_faktur'),
             'due_date'      => $request->input('due_date'),
             'metode_bayar'  => trim($request->input('metode_bayar')),
-            'ppn'           => $ppnInput,
+            'ppn'           => $ppn,
             'dp'            => $dpInput,
             'grand_total'   => $grandTotal,
             'user'          => $currentUser,

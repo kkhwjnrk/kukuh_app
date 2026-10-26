@@ -82,29 +82,31 @@ try {
     ");
     echo "      - [OK] 5 Baris Data Produk terisi.\n";
 
-    // D. 2 Transaksi Faktur (Sesuai contoh Faktur Foto 3)
+    // D. 2 Transaksi Faktur (Sesuai contoh Faktur Foto 3 APOTEK DEMO)
     // Faktur 1: PJ2110070001 (Customer 1, Perusahaan 1)
-    // 2 x Bodrex (6.000) + 3 x Vit C (7.500) + 5 x Paracetamol (60.000) = Total 73.500, PPN 6.950, Grand Total = 76.450 (atau diskon sesuai nota)
+    // 2 x Bodrex (2.000) + 3 x Vit C (7.500) + 5 x Paracetamol (60.000) = Total 69.500, PPN 6.950, Grand Total = 76.450
+    // Faktur 2: PJ2110070002 (Customer 2, Perusahaan 1)
+    // 3 x Amoxicillin (25.500) + 1 x Betadine (21.500) = Total 47.000, PPN 11% (5.170), DP 10.000, Grand Total = 42.170
     $pdo->exec("INSERT INTO `faktur` 
         (`no_faktur`, `tgl_faktur`, `due_date`, `metode_bayar`, `ppn`, `dp`, `grand_total`, `user`, `id_customer`, `id_perusahaan`) 
         VALUES 
         ('PJ2110070001', '2026-10-07', '2026-10-07', 'TUNAI', 6950.00, 0.00, 76450.00, 'Kasir Utama', 1, 1),
-        ('PJ2110070002', '2026-10-15', '2026-10-22', 'TRANSFER', 4250.00, 10000.00, 46750.00, 'Kasir Utama', 2, 1)
+        ('PJ2110070002', '2026-10-15', '2026-10-22', 'TRANSFER', 5170.00, 10000.00, 42170.00, 'Kasir Utama', 2, 1)
     ");
 
-    // Detail Faktur 1
+    // Detail Faktur 1 (Total: 69.500)
     $pdo->exec("INSERT INTO `detail_faktur` (`no_faktur`, `id_produk`, `qty`, `price`) VALUES
-        ('PJ2110070001', 1, 2, 3000.00),
+        ('PJ2110070001', 1, 2, 1000.00),
         ('PJ2110070001', 2, 3, 2500.00),
         ('PJ2110070001', 3, 5, 12000.00)
     ");
 
-    // Detail Faktur 2
+    // Detail Faktur 2 (Total: 47.000)
     $pdo->exec("INSERT INTO `detail_faktur` (`no_faktur`, `id_produk`, `qty`, `price`) VALUES
         ('PJ2110070002', 4, 3, 8500.00),
         ('PJ2110070002', 5, 1, 21500.00)
     ");
-    echo "      - [OK] 2 Baris Transaksi Faktur & Detail Faktur terisi.\n\n";
+    echo "      - [OK] 2 Baris Transaksi Faktur & Detail Faktur terisi (100% Cocok Foto 3).\n\n";
 
     echo "==============================================================\n";
     echo "   MIGRASI & SEEDING BERHASIL! (100% MEMENUHI BUTIR 1 & 3)    \n";

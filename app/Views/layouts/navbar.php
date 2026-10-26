@@ -13,9 +13,9 @@
         </span>
 
         <?php if (has_role(['admin', 'petugas'])): ?>
-        <a href="<?= url('/transactions/create') ?>" class="btn btn-primary btn-sm">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            <span>+ <?= htmlspecialchars(term('transaction.singular')) ?></span>
+        <a href="<?= url('/faktur/create') ?>" class="btn btn-primary btn-sm">
+            <svg fill="none" stroke="currentColor" width="16" height="16" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <span>Faktur Baru</span>
         </a>
         <?php endif; ?>
     </div>
