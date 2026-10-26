@@ -269,6 +269,64 @@ a:hover {
     flex: 1;
 }
 
+/* App Footer Bar */
+.app-footer {
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    font-size: 0.825rem;
+    color: var(--text-muted);
+    margin-top: auto;
+}
+
+.app-footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.app-footer .footer-left strong {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.app-footer .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+.app-footer .footer-dot {
+    color: var(--border-color);
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.app-footer .footer-badge {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .app-footer {
+        padding: 1rem 1.25rem;
+    }
+    .app-footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.35rem;
+    }
+}
+
 /* --------------------------------------------------------------
    CARDS, KPI STATS, GRIDS
    -------------------------------------------------------------- */

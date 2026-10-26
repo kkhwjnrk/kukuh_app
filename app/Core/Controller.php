@@ -67,6 +67,7 @@ abstract class Controller
         require __DIR__ . '/../Views/layouts/alert.php';
         echo $content;
         echo '</main>';
+        require __DIR__ . '/../Views/layouts/footer_bar.php';
         echo '</div>'; // .app-content
         echo '</div>'; // .app-container
         require __DIR__ . '/../Views/layouts/footer.php';
