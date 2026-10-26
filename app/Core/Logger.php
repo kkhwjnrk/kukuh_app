@@ -7,7 +7,6 @@ namespace App\Core;
  * 
  * Menyediakan mekanisme pencatatan riwayat error dan aktivitas sistem
  * ke file log lokal (storage/logs/app.log).
- * Memenuhi SKKNI J.620100.025.02 (Melakukan Debugging).
  */
 class Logger
 {

@@ -10,7 +10,7 @@ use PDOException;
  * 
  * Mengelola koneksi basis data menggunakan PDO (PHP Data Objects)
  * dengan pola Singleton untuk efisiensi memori dan Prepared Statements
- * demi pencegahan celah keamanan SQL Injection (Memenuhi SKKNI J.620100.021.02).
+ * untuk pencegahan celah keamanan SQL Injection.
  */
 class Database
 {

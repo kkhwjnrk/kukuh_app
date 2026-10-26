@@ -98,7 +98,7 @@
             <div class="sign-box">
                 <p>Mengetahui / Verifikator,</p>
                 <div class="sign-space"></div>
-                <p class="sign-name">( Supervisor / Asesor )</p>
+                <p class="sign-name">( Pimpinan Apotek )</p>
             </div>
             <div class="sign-box">
                 <p>Dicetak Oleh,</p>

@@ -11,8 +11,7 @@ use PDO;
 /**
  * Class Faktur
  * 
- * Model representasi entitas Faktur Penjualan (Header & Transaksi ACID)
- * Sesuai Diagram LRS LSP Programmer (FR.IA.04A) dan SKKNI J.620100.021.02.
+ * Model representasi entitas Faktur Penjualan (Header & Transaksi ACID).
  */
 class Faktur extends Model
 {

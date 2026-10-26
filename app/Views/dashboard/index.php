@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<!-- 4 KARTU STATISTIK (KPI CARDS) SESUAI ENTITAS LRS -->
+<!-- 4 KARTU STATISTIK (KPI CARDS) -->
 <div class="stats-grid">
     <div class="stat-card">
         <div class="stat-icon indigo">

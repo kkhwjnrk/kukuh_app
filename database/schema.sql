@@ -1,7 +1,6 @@
 -- ==============================================================
--- STRUKTUR BASIS DATA SISTEM FAKTUR PENJUALAN
--- Standar Uji Kompetensi LSP Programmer (FR.IA.04A)
--- Sesuai Diagram Logical Record Structure (LRS)
+-- STRUKTUR BASIS DATA SISTEM INFORMASI APOTEK LSP
+-- Skema Tabel Relasional & Manajemen Transaksi
 -- ==============================================================
 
 CREATE DATABASE IF NOT EXISTS `apotek_lsp` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -19,17 +18,18 @@ DROP TABLE IF EXISTS `items`;
 DROP TABLE IF EXISTS `categories`;
 DROP TABLE IF EXISTS `users`;
 
--- 1. TABEL PENGGUNA (UNTUK AUTENTIKASI LOGIN ADMIN/PETUGAS)
+-- 1. TABEL PENGGUNA (UNTUK AUTENTIKASI LOGIN ADMIN/PETUGAS/MANAJER)
 CREATE TABLE `users` (
     `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `username` VARCHAR(50) NOT NULL UNIQUE,
     `password` VARCHAR(255) NOT NULL,
     `nama_lengkap` VARCHAR(100) NOT NULL,
     `role` ENUM('admin', 'petugas', 'manajer') NOT NULL DEFAULT 'admin',
-    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 2. TABEL PERUSAHAAN (SESUAI LRS)
+-- 2. TABEL PERUSAHAAN
 CREATE TABLE `perusahaan` (
     `id_perusahaan` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `nama_perusahaan` VARCHAR(100) NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE `perusahaan` (
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. TABEL CUSTOMER (SESUAI LRS)
+-- 3. TABEL CUSTOMER
 CREATE TABLE `customer` (
     `id_customer` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `nama_customer` VARCHAR(100) NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE `customer` (
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 4. TABEL PRODUK (SESUAI LRS)
+-- 4. TABEL PRODUK
 CREATE TABLE `produk` (
     `id_produk` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `nama_produk` VARCHAR(150) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE `produk` (
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 5. TABEL FAKTUR (SESUAI LRS)
+-- 5. TABEL FAKTUR
 CREATE TABLE `faktur` (
     `no_faktur` VARCHAR(50) PRIMARY KEY,
     `tgl_faktur` DATE NOT NULL,
@@ -81,7 +81,7 @@ CREATE TABLE `faktur` (
     INDEX `idx_faktur_tgl` (`tgl_faktur`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 6. TABEL DETAIL FAKTUR (SESUAI LRS)
+-- 6. TABEL DETAIL FAKTUR
 CREATE TABLE `detail_faktur` (
     `id_detail` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     `no_faktur` VARCHAR(50) NOT NULL,

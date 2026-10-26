@@ -64,7 +64,7 @@
             background-color: #1d4ed8;
         }
 
-        /* INVOICE PAPER (PERSIS SESUAI FOTO 3 UJIKOM) */
+        /* INVOICE PAPER STYLES */
         .invoice-sheet {
             max-width: 820px;
             margin: 0 auto;
@@ -331,7 +331,7 @@
         </div>
     </div>
 
-    <!-- KERTAS FAKTUR PENJUALAN RESMI (PERSIS DOKUMEN FOTO 3) -->
+    <!-- DOKUMEN FAKTUR PENJUALAN RESMI -->
     <div class="invoice-sheet">
 
         <!-- 1. KOP PERUSAHAAN & JUDUL FAKTUR -->

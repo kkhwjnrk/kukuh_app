@@ -5,8 +5,7 @@ namespace Tests;
 /**
  * Micro Unit Test Runner (Standalone Pure PHP)
  * 
- * Memenuhi SKKNI J.620100.033.02 (Melaksanakan Pengujian Unit Program)
- * Dapat dijalankan langsung di terminal tanpa ketergantungan composer/phpunit:
+ * Pengujian unit program otomatis tanpa ketergantungan composer/phpunit:
  * php tests/run.php
  */
 class TestRunner
@@ -84,7 +83,7 @@ class TestRunner
         $total = $this->passed + $this->failed;
 
         echo "\n======================================================\n";
-        echo "HASIL AKHIR PENGUJIAN UNIT (SKKNI J.620100.033.02)\n";
+        echo "HASIL AKHIR PENGUJIAN UNIT SISTEM\n";
         echo "======================================================\n";
         echo "Total Test Dijalankan : {$total}\n";
         echo "Sukses (Passed)       : \033[32m{$this->passed}\033[0m\n";

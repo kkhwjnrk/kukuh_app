@@ -1,5 +1,5 @@
 /* ==============================================================
-   SIM-PRO MODERN LIGHT DASHBOARD DESIGN SYSTEM
+   APOTEK LSP - MODERN LIGHT DASHBOARD DESIGN SYSTEM
    Clean, Professional, SaaS-grade UI with Zero NPM Dependencies
    Font: Plus Jakarta Sans / Inter / System UI Fallback
    ============================================================== */
@@ -881,7 +881,7 @@ a:hover {
 }
 
 /* --------------------------------------------------------------
-   PRINT STYLESHEET (SKKNI LAPORAN & CETAK NOTA)
+   PRINT STYLESHEET (CETAK NOTA & LAPORAN)
    -------------------------------------------------------------- */
 @media print {
     body {

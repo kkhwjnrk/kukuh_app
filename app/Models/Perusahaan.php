@@ -7,8 +7,7 @@ use App\Core\Model;
 /**
  * Class Perusahaan
  * 
- * Model representasi entitas Perusahaan (Penerbit Faktur Penjualan)
- * Sesuai Diagram LRS LSP Programmer (FR.IA.04A).
+ * Model representasi entitas Perusahaan (Penerbit Faktur Penjualan).
  */
 class Perusahaan extends Model
 {

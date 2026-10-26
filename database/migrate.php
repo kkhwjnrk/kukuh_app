@@ -1,17 +1,16 @@
 <?php
 /**
  * Script Migrasi & Seeder Database Otomatis
- * Sesuai Spesifikasi Soal Ujikom LSP Programmer (FR.IA.04A)
+ * Sistem Informasi Apotek LSP
  * 
- * - Mengikuti skema Diagram LRS: perusahaan, customer, produk, faktur, detail_faktur
- * - Mengisi data uji coba: 5 baris master data & 2 baris transaksi faktur
+ * - Membuat dan menginisialisasi tabel relasional
+ * - Mengisi data awal master dan transaksi
  * 
  * Jalankan via terminal: php database/migrate.php
  */
 
 echo "==============================================================\n";
-echo "   SISTEM FAKTUR PENJUALAN - DATABASE MIGRATION & SEEDER       \n";
-echo "   Skema Sertifikasi: Pemrogram (LSP-Unpam / BNSP)             \n";
+echo "   APOTEK LSP - DATABASE MIGRATION & SEEDER                   \n";
 echo "==============================================================\n\n";
 
 $dbConfig = require __DIR__ . '/../config/database.php';
@@ -30,8 +29,8 @@ try {
     $pdo->exec("USE `{$dbConfig['database']}`");
     echo "      -> Database siap.\n\n";
 
-    // 2. Eksekusi Schema LRS
-    echo "[2/4] Mengeksekusi tabel dari database/schema.sql (Sesuai Diagram LRS)...\n";
+    // 2. Eksekusi Schema
+    echo "[2/4] Mengeksekusi tabel dari database/schema.sql...\n";
     $schemaSql = file_get_contents(__DIR__ . '/schema.sql');
     $pdo->exec($schemaSql);
     echo "      -> 6 Tabel (users, perusahaan, customer, produk, faktur, detail_faktur) berhasil dibuat.\n\n";
@@ -50,10 +49,10 @@ try {
     }
     echo "      -> Akun Pengguna siap (admin, petugas, kasir, manajer | password: password).\n\n";
 
-    // 4. Seeding Data Uji Coba (Ketentuan: 5 Master Data & 2 Transaksi)
-    echo "[4/4] Melakukan seeding data uji coba (5 Master Data & 2 Transaksi)...\n";
+    // 4. Seeding Data Master & Transaksi Awal
+    echo "[4/4] Melakukan seeding data master dan transaksi awal...\n";
 
-    // A. 5 Data Master Perusahaan
+    // A. Data Master Perusahaan
     $pdo->exec("INSERT INTO `perusahaan` (`id_perusahaan`, `nama_perusahaan`, `alamat`, `no_telp`, `fax`) VALUES
         (1, 'APOTEK DEMO FARMA', 'Jl. Merdeka No. 123, Tangerang', '081234567840', '021-5551234'),
         (2, 'PT SUMBER MEDIKA UTAMA', 'Kawasan Industri Cikupa Mas Blok B-5, Tangerang', '021-5901234', '021-5901235'),
@@ -61,9 +60,9 @@ try {
         (4, 'PT BINTANG PHARMA INDONESIA', 'Jl. Raya Serpong KM 8, Tangerang Selatan', '021-5374411', '021-5374412'),
         (5, 'KLINIK & APOTEK SEHAT BERSAMA', 'Jl. Daan Mogot No. 88, Jakarta Barat', '021-5667788', NULL)
     ");
-    echo "      - [OK] 5 Baris Data Perusahaan terisi.\n";
+    echo "      - [OK] Data Perusahaan terisi.\n";
 
-    // B. 5 Data Master Customer
+    // B. Data Master Customer
     $pdo->exec("INSERT INTO `customer` (`id_customer`, `nama_customer`, `perusahaan_cust`, `alamat`, `no_telp`) VALUES
         (1, 'Firman Syah', 'Pribadi / Perorangan', 'Jl. Tambak Medokan Ayu 3c No 23, Surabaya', '0821213445570'),
         (2, 'Hendra Kusuma', 'PT Graha Pratama Mandiri', 'Jl. Boulevard Gading Serpong Blok M-10', '081388991122'),
@@ -71,9 +70,9 @@ try {
         (4, 'Bambang Sudiro', 'CV Berkah Karya Sejati', 'Jl. Pahlawan Seribu No. 9, BSD City', '081900112233'),
         (5, 'dr. Maya Indrawati', 'Praktek Dokter Bersama', 'Jl. Bintaro Utama Sektor 3A, Tangsel', '081122334455')
     ");
-    echo "      - [OK] 5 Baris Data Customer terisi.\n";
+    echo "      - [OK] Data Customer terisi.\n";
 
-    // C. 5 Data Master Produk (Sesuai contoh Faktur di Soal)
+    // C. Data Master Produk
     $pdo->exec("INSERT INTO `produk` (`id_produk`, `nama_produk`, `price`, `jenis`, `stock`) VALUES
         (1, 'Bodrex Flu & Batuk PE', 3000.00, 'Tablet / Ampul', 150),
         (2, 'VITAMIN C 50 mg IPI 10 Tablet', 2500.00, 'Strip / Botol', 200),
@@ -81,13 +80,9 @@ try {
         (4, 'Amoxicillin Trihydrate 500mg', 8500.00, 'Strip', 120),
         (5, 'Betadine Antiseptic Solution 30ml', 21500.00, 'Botol', 65)
     ");
-    echo "      - [OK] 5 Baris Data Produk terisi.\n";
+    echo "      - [OK] Data Produk terisi.\n";
 
-    // D. 2 Transaksi Faktur (Sesuai contoh Faktur Foto 3 APOTEK DEMO)
-    // Faktur 1: PJ2110070001 (Customer 1, Perusahaan 1)
-    // 2 x Bodrex (2.000) + 3 x Vit C (7.500) + 5 x Paracetamol (60.000) = Total 69.500, PPN 6.950, Grand Total = 76.450
-    // Faktur 2: PJ2110070002 (Customer 2, Perusahaan 1)
-    // 3 x Amoxicillin (25.500) + 1 x Betadine (21.500) = Total 47.000, PPN 11% (5.170), DP 10.000, Grand Total = 42.170
+    // D. Transaksi Faktur Awal
     $pdo->exec("INSERT INTO `faktur` 
         (`no_faktur`, `tgl_faktur`, `due_date`, `metode_bayar`, `ppn`, `dp`, `grand_total`, `user`, `id_customer`, `id_perusahaan`) 
         VALUES 
@@ -95,22 +90,22 @@ try {
         ('PJ2110070002', '2026-10-15', '2026-10-22', 'TRANSFER', 5170.00, 10000.00, 42170.00, 'Kasir Utama', 2, 1)
     ");
 
-    // Detail Faktur 1 (Total: 69.500)
+    // Detail Faktur 1
     $pdo->exec("INSERT INTO `detail_faktur` (`no_faktur`, `id_produk`, `qty`, `price`) VALUES
         ('PJ2110070001', 1, 2, 1000.00),
         ('PJ2110070001', 2, 3, 2500.00),
         ('PJ2110070001', 3, 5, 12000.00)
     ");
 
-    // Detail Faktur 2 (Total: 47.000)
+    // Detail Faktur 2
     $pdo->exec("INSERT INTO `detail_faktur` (`no_faktur`, `id_produk`, `qty`, `price`) VALUES
         ('PJ2110070002', 4, 3, 8500.00),
         ('PJ2110070002', 5, 1, 21500.00)
     ");
-    echo "      - [OK] 2 Baris Transaksi Faktur & Detail Faktur terisi (100% Cocok Foto 3).\n\n";
+    echo "      - [OK] Transaksi Faktur & Detail Faktur terisi.\n\n";
 
     echo "==============================================================\n";
-    echo "   MIGRASI & SEEDING BERHASIL! (100% MEMENUHI BUTIR 1 & 3)    \n";
+    echo "   MIGRASI & SEEDING SELESAI DENGAN SUKSES!                   \n";
     echo "==============================================================\n";
 
 } catch (PDOException $e) {

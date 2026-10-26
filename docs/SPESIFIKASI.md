@@ -1,67 +1,72 @@
-# DOKUMEN SPESIFIKASI PROGRAM & ARSITEKTUR SISTEM
-**Skema Sertifikasi:** Pemrogram (Programmer) - LSP Universitas Pamulang / BNSP  
-**Nomor Skema:** 18/SS.PRG/LSP-Unpam/2018  
-**Kode & Unit Kompetensi:**
-- **(J.620100.009.01)** - Menggunakan Spesifikasi Program
-- **(J.620100.016.01)** - Menulis Kode dengan Prinsip sesuai Guidelines dan Best Practices
-- **(J.620100.017.02)** - Mengimplementasikan Pemrograman Terstruktur
-- **(J.620100.018.02)** - Mengimplementasikan Pemrograman Berorientasi Objek
-- **(J.620100.019.02)** - Menggunakan Library Atau Komponen Pre-Existing
-- **(J.620100.021.02)** - Menerapkan Akses Basis Data
-- **(J.620100.023.02)** - Membuat Dokumen Kode Program
-- **(J.620100.033.02)** - Melaksanakan Pengujian Unit
+# SPESIFIKASI KEBUTUHAN PERANGKAT LUNAK (SRS)
+## Sistem Informasi Manajemen Apotek LSP
 
 ---
 
 ## 1. Deskripsi Umum Sistem
-**FAKTUR-PRO** (*Sistem Faktur Penjualan Terpadu*) adalah aplikasi web enterprise yang dirancang khusus untuk memenuhi seluruh standar kompetensi uji sertifikasi LSP Pemrogram. Sistem ini memfasilitasi pencatatan entitas perusahaan penerbit, pengelolaan data customer rekanan, katalog produk persediaan, dan penerbitan faktur penjualan multi-item dengan tata kelola transaksi atomik (*ACID Transaction*), serta cetak dokumen invoice resmi.
 
-Aplikasi dibangun dengan arsitektur **Clean MVC (Model-View-Controller)** menggunakan bahasa pemrograman **PHP Native** berstandar **PSR-12** dan basis data relasional **MySQL** via **PDO (PHP Data Objects)**.
+**Apotek LSP** adalah sistem informasi berbasis web yang dirancang untuk mengelola proses bisnis operasional apotek secara terintegrasi. Sistem ini menangani pencatatan profil apotek/perusahaan penerbit, manajemen data pelanggan/rekanan, katalog obat dan produk farmasi, penerbitan faktur penjualan multi-item dengan prinsip transaksi atomik (*ACID Transaction*), pencetakan faktur resmi, serta modul pelaporan penjualan dan persediaan.
+
+Aplikasi dibangun dengan arsitektur **MVC (Model-View-Controller)** menggunakan bahasa pemrograman **PHP** berstandar **PSR-12** dan basis data relasional **MySQL** via **PDO (PHP Data Objects)**.
 
 ---
 
 ## 2. Kebutuhan Sistem (System Requirements)
 
 ### 2.1 Kebutuhan Fungsional (Functional Requirements)
-Sesuai Struktur Menu Administrator (Soal Praktek FR.IA.04A):
-1. **Menu 1: Beranda (Dashboard)**
-   - Menampilkan metrik ringkasan eksekutif: Total Produk, Total Customer, Total Omset Penjualan, dan Total Faktur Diterbitkan.
-   - Peringatan dini (*Early Warning System*) untuk produk dengan stok menipis (<= 15 unit).
-   - Tabel 5 faktur penjualan terkini dengan status jatuh tempo.
-2. **Menu 2: Kelola Data Perusahaan**
-   - Menampilkan daftar perusahaan penerbit faktur beserta paginasi dan filter pencarian.
-   - Formulir tambah, ubah, dan hapus data instansi perusahaan (`id_perusahaan`, `nama_perusahaan`, `alamat`, `no_telp`, `fax`).
-3. **Menu 3: Kelola Data Customer**
-   - Menampilkan data pelanggan/rekanan (`id_customer`, `nama_customer`, `perusahaan_cust`, `alamat`, `no_telp`).
-   - Formulir tambah, ubah, dan hapus data customer.
-   - Fitur khusus **Preview / Cetak Data Customer** dalam format rekapitulasi formal siap cetak/PDF.
-4. **Menu 4: Kelola Data Produk**
-   - Menampilkan katalog barang/obat (`id_produk`, `nama_produk`, `price`, `jenis`, `stock`).
-   - Formulir tambah, ubah, dan hapus data produk dengan verifikasi integritas referensial.
-   - Autocomplete API JSON (`/api/produk/search`) untuk integrasi keranjang faktur.
-5. **Menu 5: Kelola Data Penjualan (Faktur)**
-   - Menampilkan riwayat transaksi faktur dengan filter tanggal dan kata kunci.
-   - **Tambah Penjualan (Interactive Cart):** Formulir dinamis multi-item dengan kalkulasi otomatis subtotal, PPN (11%), Uang Muka (DP), dan Grand Total.
-   - Pemotongan stok barang otomatis dengan mekanisme `PDO Transaction (BEGIN -> COMMIT / ROLLBACK)`.
-   - **Ubah Penjualan & Hapus Penjualan:** Penyesuaian barang dan pengembalian stok otomatis.
-   - **Cetak Faktur Penjualan:** Tampilan cetak faktur resmi yang identik 100% dengan contoh nota soal ujikom (lengkap dengan kop instansi, rincian produk, ringkasan pembayaran, dan kolom tanda tangan ganda).
+
+1. **Modul Dashboard (Beranda)**
+   - Menampilkan metrik ringkasan eksekutif: Total Omset Penjualan, Total Faktur Diterbitkan, Total Produk, dan Total Pelanggan Terdaftar.
+   - Peringatan dini (*Early Warning System*) untuk produk dengan kuantitas stok menipis (<= 15 unit).
+   - Tabel riwayat transaksi faktur penjualan terkini beserta status jatuh tempo.
+
+2. **Modul Kelola Data Perusahaan**
+   - Menampilkan daftar identitas apotek/perusahaan penerbit faktur beserta fasilitas paginasi dan pencarian.
+   - Pengelolaan formulir tambah, ubah, dan hapus data instansi perusahaan (`id_perusahaan`, `nama_perusahaan`, `alamat`, `no_telp`, `fax`).
+
+3. **Modul Kelola Data Customer**
+   - Menampilkan dan mengelola data rekanan/pelanggan (`id_customer`, `nama_customer`, `perusahaan_cust`, `alamat`, `no_telp`).
+   - Formulir tambah, ubah, dan hapus data pelanggan.
+   - Fitur **Cetak Data Customer** dalam format rekapitulasi formal siap cetak/PDF.
+
+4. **Modul Kelola Data Produk & Obat**
+   - Menampilkan katalog inventaris obat dan barang farmasi (`id_produk`, `nama_produk`, `price`, `jenis`, `stock`).
+   - Formulir tambah, ubah, dan hapus data produk dengan verifikasi integritas data relasional.
+   - Indikator status ketersediaan stok (Aman, Menipis, Habis).
+
+5. **Modul Kelola Faktur & Penjualan**
+   - Menampilkan riwayat transaksi faktur penjualan dengan penyaringan rentang tanggal dan pencarian nomor faktur.
+   - **Formulir Faktur Multi-Item:** Keranjang produk interaktif dengan kalkulasi otomatis Subtotal, PPN (11%), Uang Muka (DP), dan Grand Total.
+   - Penentuan tanggal jatuh tempo otomatis berdasarkan pilihan pembayaran tempo.
+   - Tombol simpan dinonaktifkan jika belum ada produk yang dipilih dalam transaksi.
+   - Pemotongan kuantitas stok otomatis dengan perlindungan transaksi atomik (`PDO Transaction`).
+   - **Cetak Faktur Penjualan:** Dokumen faktur resmi lengkap dengan kop instansi apotek, nomor surat izin apotek, rincian produk, ringkasan pembayaran, dan kolom tanda tangan.
+
+6. **Modul Laporan Eksekutif**
+   - **Laporan Penjualan:** Penyaringan data berdasarkan rentang tanggal dan metode pembayaran, ringkasan total omset dan laba kotor, serta opsi cetak dan ekspor CSV.
+   - **Laporan Produk & Stok:** Penyaringan data berdasarkan kategori sediaan dan status stok, valuasi nilai persediaan, cetak dokumen, dan ekspor CSV.
+
+7. **Modul Kelola Pengguna & Hak Akses**
+   - Pengelolaan akun pengguna internal (`admin`, `petugas`, `manajer`).
+   - Kontrol hak akses berbasis peran (Role-Based Access Control).
 
 ### 2.2 Kebutuhan Non-Fungsional (Non-Functional Requirements)
+
 1. **Keamanan (Security):**
-   - Mencegah SQL Injection dengan 100% PDO Prepared Statements.
-   - Mencegah XSS melalui fungsi sanitasi entitas HTML (`htmlspecialchars`) di seluruh lapisan view.
-   - Mencegah serangan CSRF dengan validasi token rahasia per-sesi pada seluruh formulir POST.
-   - Penyimpanan kata sandi menggunakan enkripsi satu arah *BCRYPT* (`password_hash`).
-2. **Portabilitas & Performa:**
-   - Tanpa dependensi pihak ketiga yang memerlukan koneksi internet (100% mandiri pada Laragon/XAMPP).
-   - Clean URL via mod_rewrite Apache (`/dashboard`, `/faktur`, `/customer`, dll).
-   - Paginasi data dinamis di tingkat database (SQL LIMIT & OFFSET) untuk efisiensi memori.
+   - Pencegahan SQL Injection melalui penggunaan PDO Prepared Statements secara konsisten.
+   - Pencegahan serangan Cross-Site Scripting (XSS) melalui sanitasi keluaran HTML (`htmlspecialchars`).
+   - Pencegahan Cross-Site Request Forgery (CSRF) dengan token verifikasi per sesi pada seluruh formulir POST.
+   - Penyimpanan kata sandi terenkripsi menggunakan algoritma BCRYPT (`password_hash`).
+   - Dialog konfirmasi interaktif sebelum eksekusi aksi destruktif (hapus data, logout).
+
+2. **Performa & Portabilitas:**
+   - Beroperasi mandiri pada lingkungan server lokal (Laragon atau XAMPP) tanpa dependensi eksternal.
+   - Paginasi data dinamis pada tingkat basis data (SQL `LIMIT` & `OFFSET`).
+   - Clean URL melalui modul Apache `mod_rewrite`.
 
 ---
 
-## 3. Pemodelan Basis Data & LRS (Logical Record Structure)
-
-Diagram LRS (Logical Record Structure) sistem mengacu secara mutlak pada instruksi soal sertifikasi LSP:
+## 3. Struktur Basis Data Relasional
 
 ```mermaid
 erDiagram
@@ -71,6 +76,8 @@ erDiagram
         varchar password
         varchar nama_lengkap
         enum role
+        datetime created_at
+        datetime updated_at
     }
 
     PERUSAHAAN ||--o{ FAKTUR : menerbitkan
@@ -80,6 +87,8 @@ erDiagram
         text alamat
         varchar no_telp
         varchar fax
+        datetime created_at
+        datetime updated_at
     }
 
     CUSTOMER ||--o{ FAKTUR : menerima
@@ -89,6 +98,8 @@ erDiagram
         varchar perusahaan_cust
         text alamat
         varchar no_telp
+        datetime created_at
+        datetime updated_at
     }
 
     FAKTUR ||--|{ DETAIL_FAKTUR : memiliki
@@ -103,6 +114,8 @@ erDiagram
         varchar user
         int id_customer FK
         int id_perusahaan FK
+        datetime created_at
+        datetime updated_at
     }
 
     PRODUK ||--o{ DETAIL_FAKTUR : tertera_pada
@@ -112,6 +125,8 @@ erDiagram
         decimal price
         varchar jenis
         int stock
+        datetime created_at
+        datetime updated_at
     }
 
     DETAIL_FAKTUR {
@@ -120,139 +135,60 @@ erDiagram
         int id_produk FK
         int qty
         decimal price
+        datetime created_at
     }
 ```
 
-### Kamus Data Relasional:
-1. **`perusahaan`**: Menyimpan identitas instansi penerbit faktur penjualan (`id_perusahaan` sebagai PK).
-2. **`customer`**: Menyimpan profil pelanggan atau instansi pembeli (`id_customer` sebagai PK).
-3. **`produk`**: Menyimpan inventaris barang dagangan/obat (`id_produk` sebagai PK, `price` bertipe DECIMAL, `stock` bertipe INT).
-4. **`faktur`**: Menyimpan header transaksi penjualan (`no_faktur` VARCHAR(30) sebagai PK, relasi FK ke `customer` dan `perusahaan`).
-5. **`detail_faktur`**: Menyimpan rincian item transaksi (`id_detail` PK auto-increment, relasi FK ke `faktur` dan `produk`).
-6. **`users`**: Menyimpan akun pengguna pengelola aplikasi (`id` PK, otentikasi login BCRYPT).
+### Penjelasan Entitas:
+1. **`users`**: Menyimpan identitas akun pengguna dan peran sistem (Administrator, Petugas, Manajer).
+2. **`perusahaan`**: Menyimpan profil instansi apotek/perusahaan penerbit faktur.
+3. **`customer`**: Menyimpan data rekanan/pelanggan penerima faktur.
+4. **`produk`**: Menyimpan katalog obat dan barang farmasi beserta stok dan harga satuan.
+5. **`faktur`**: Menyimpan ringkasan transaksi penjualan (header faktur).
+6. **`detail_faktur`**: Menyimpan rincian setiap item obat/barang dalam transaksi faktur.
 
 ---
 
-## 4. Alur Proses Bisnis & Transaksi ACID (Activity Diagram)
+## 4. Alur Transaksi Faktur (ACID Transaction)
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Kasir as Kasir / Operator
-    participant UI as Antarmuka Form Faktur
+    actor Kasir
     participant Controller as FakturController
-    participant Model as Faktur & DetailFaktur Model
-    participant DB as MySQL Database (PDO)
+    participant Model as Faktur (Model)
+    participant DB as MySQL (PDO)
 
-    Kasir->>UI: Memilih Customer, Perusahaan & Produk
-    Kasir->>UI: Mengisi Qty, PPN, DP & Klik "Terbitkan Faktur"
-    UI->>Controller: POST /faktur/store (Data Header + Array Items)
-    Controller->>Controller: Validasi Formulir & CSRF Token
-    Controller->>Model: createWithDetails(fakturData, items)
+    Kasir->>Controller: Submit Transaksi Faktur (Data Header & Item Obat)
+    Controller->>Controller: Validasi Parameter (Customer, Tanggal, Item >= 1)
+    Controller->>Model: simpanFaktur(headerData, items)
     
-    Model->>DB: PDO::beginTransaction()
-    Model->>DB: INSERT INTO faktur (Header)
+    Model->>DB: beginTransaction()
+    Model->>DB: INSERT INTO faktur (...)
     
     loop Setiap Item Produk
-        Model->>DB: INSERT INTO detail_faktur (no_faktur, id_produk, qty, price)
-        Model->>DB: UPDATE produk SET stock = stock - qty WHERE id = id_produk AND stock >= qty
-        alt Stok Cukup
-            DB-->>Model: Affected Rows == 1 (Valid)
-        else Stok Kurang / Habis
-            DB-->>Model: Affected Rows == 0 (Gagal)
-            Model->>DB: PDO::rollBack()
-            Model-->>Controller: Exception: "Stok Tidak Mencukupi"
-            Controller-->>UI: Flash Error & Batalkan Simpan
+        Model->>DB: SELECT stock FROM produk WHERE id_produk = ? FOR UPDATE
+        alt Stok Mencukupi
+            Model->>DB: INSERT INTO detail_faktur (...)
+            Model->>DB: UPDATE produk SET stock = stock - qty WHERE id_produk = ?
+        else Stok Kurang
+            Model->>DB: rollBack()
+            Model-->>Controller: Exception: "Stok tidak mencukupi"
+            Controller-->>Kasir: Tampilkan Notifikasi Gagal
         end
     end
 
-    Model->>DB: PDO::commit() (Sukses Seluruhnya)
-    Model-->>Controller: Return no_faktur
-    Controller-->>UI: Redirect /faktur/show/{no_faktur} + Flash Success
+    Model->>DB: commit()
+    Model-->>Controller: Sukses (Nomor Faktur)
+    Controller-->>Kasir: Redirect ke Halaman Detail Faktur / Cetak
 ```
 
 ---
 
-## 5. Struktur Menu & Arsitektur Direktori Program
+## 5. Pengujian Unit Sistem
 
-```
-kukuh_app/
-├── app/
-│   ├── Controllers/
-│   │   ├── AuthController.php          (Autentikasi & Session)
-│   │   ├── CustomerController.php      (CRUD Customer + Print Preview)
-│   │   ├── DashboardController.php     (Analitik Dasbor & KPI)
-│   │   ├── FakturController.php        (Siklus Faktur Multi-Item & Cetak)
-│   │   ├── PerusahaanController.php    (CRUD Master Perusahaan)
-│   │   ├── ProdukController.php        (CRUD Master Produk & Autocomplete API)
-│   │   └── UserController.php          (Tata Kelola Pengguna Admin)
-│   ├── Core/
-│   │   ├── Auth.php                    (Manajemen Akses & Role)
-│   │   ├── Controller.php              (Pewarisan View & Respon)
-│   │   ├── Database.php                (Singleton Koneksi PDO)
-│   │   ├── Model.php                   (Abstract Base Data Mapper)
-│   │   ├── Request.php                 (Sanitasi Input & Clean URI)
-│   │   ├── Router.php                  (Pencocokan Rute & Pipeline Middleware)
-│   │   ├── Session.php                 (Pengelolaan Flash & CSRF)
-│   │   └── Validator.php               (Mesin Validasi Input)
-│   ├── Helpers/
-│   │   └── utility.php                 (Fungsi Format Rupiah, Tanggal, URL, CSRF)
-│   ├── Models/
-│   │   ├── Customer.php
-│   │   ├── DetailFaktur.php
-│   │   ├── Faktur.php
-│   │   ├── Perusahaan.php
-│   │   ├── Produk.php
-│   │   └── User.php
-│   ├── Views/
-│   │   ├── customer/                   (index, create, edit, print)
-│   │   ├── dashboard/                  (index)
-│   │   ├── faktur/                     (index, create, edit, show, print)
-│   │   ├── layouts/                    (header, navbar, sidebar, footer, alert)
-│   │   ├── perusahaan/                 (index, create, edit)
-│   │   └── produk/                     (index, create, edit)
-│   └── routes.php                      (Registrasi 20+ Clean Routes)
-├── config/
-│   ├── app.php                         (Konfigurasi Dasar & Base URL)
-│   ├── database.php                    (Kredensial MySQL)
-│   └── terms.php                       (Kamus Istilah Dinamis Ujikom)
-├── database/
-│   ├── schema.sql                      (DDL Skema Tabel Diagram LRS)
-│   └── migrate.php                     (Skrip Otomatisasi Migrasi & Seeding Data)
-├── docs/
-│   └── SPESIFIKASI.md                  (Laporan Spesifikasi Program Resmi)
-└── tests/
-    ├── TestRunner.php                  (Framework Pengujian Unit Mandiri)
-    ├── run.php                         (CLI Test Runner)
-    └── Unit/
-        ├── AuthTest.php
-        ├── DatabaseTest.php
-        ├── ModelTest.php
-        └── ValidationTest.php
-```
-
----
-
-## 6. Laporan Pengujian Unit (Unit Test Suite)
-Sistem dilengkapi dengan test suite mandiri sesuai unit kompetensi **(J.620100.033.02) Melaksanakan Pengujian Unit**:
-
-```bash
-php tests/run.php
-```
-
-**Hasil Eksekusi:**
-- Total Test Dijalankan: **12 Skenario Pengujian**
-- Status: **12 PASS / 0 FAIL (Tingkat Keberhasilan 100%)**
-- Cakupan Pengujian:
-  1. `DatabaseTest::testDatabaseConnection` (Koneksi aktif ke MySQL database)
-  2. `DatabaseTest::testDatabaseQueryExecution` (Prepared statement PDO)
-  3. `AuthTest::testPasswordHashingAndVerification` (Enkripsi BCRYPT)
-  4. `AuthTest::testRoleCheckingLogic` (Hak akses admin vs petugas)
-  5. `ValidationTest::testRequiredValidationPasses` (Input valid)
-  6. `ValidationTest::testRequiredValidationFails` (Input kosong)
-  7. `ValidationTest::testNumericValidation` (Validasi tipe data angka)
-  8. `ValidationTest::testEmailValidation` (Validasi format email)
-  9. `ModelTest::testPerusahaanData` (Integritas minimal 5 baris perusahaan)
-  10. `ModelTest::testCustomerData` (Integritas minimal 5 baris customer)
-  11. `ModelTest::testProdukData` (Integritas minimal 5 baris produk)
-  12. `ModelTest::testFakturGenerationAndRelations` (Format kode faktur & relasi multi-tabel)
+Pengujian unit dilakukan secara otomatis melalui test runner mandiri (`tests/run.php`) yang menguji:
+- **`DatabaseTest`**: Konektivitas PDO dan eksekusi query prepared statement.
+- **`AuthTest`**: Enkripsi password BCRYPT dan logika otorisasi peran pengguna.
+- **`ValidationTest`**: Validasi aturan input (required, numeric, email).
+- **`ModelTest`**: Ketersediaan data master awal, format kode faktur, dan integritas relasi antar tabel.

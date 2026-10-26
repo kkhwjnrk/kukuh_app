@@ -14,21 +14,21 @@ class ModelTest
     {
         $perusahaanModel = new Perusahaan();
         $count = $perusahaanModel->count();
-        $runner->assertTrue($count >= 5, "Tabel perusahaan harus memiliki minimal 5 data sesuai ketentuan ujikom (Ditemukan: {$count})");
+        $runner->assertTrue($count >= 5, "Tabel perusahaan harus memiliki minimal 5 data awal (Ditemukan: {$count})");
     }
 
     public function testCustomerData(TestRunner $runner): void
     {
         $customerModel = new Customer();
         $count = $customerModel->count();
-        $runner->assertTrue($count >= 5, "Tabel customer harus memiliki minimal 5 data sesuai ketentuan ujikom (Ditemukan: {$count})");
+        $runner->assertTrue($count >= 5, "Tabel customer harus memiliki minimal 5 data awal (Ditemukan: {$count})");
     }
 
     public function testProdukData(TestRunner $runner): void
     {
         $produkModel = new Produk();
         $count = $produkModel->count();
-        $runner->assertTrue($count >= 5, "Tabel produk harus memiliki minimal 5 data sesuai ketentuan ujikom (Ditemukan: {$count})");
+        $runner->assertTrue($count >= 5, "Tabel produk harus memiliki minimal 5 data awal (Ditemukan: {$count})");
 
         $lowStock = $produkModel->getLowStock(100);
         $runner->assertTrue(is_array($lowStock), "Fungsi getLowStock harus mengembalikan array");
@@ -42,7 +42,7 @@ class ModelTest
         $runner->assertTrue(strpos($code, "FK-{$dateStr}-") === 0, "Nomor Faktur harus berformat FK-YYYYMMDD-XXXX (Ditemukan: {$code})");
 
         $fakturList = $fakturModel->all();
-        $runner->assertTrue(count($fakturList) >= 2, "Tabel faktur harus memiliki minimal 2 data transaksi sesuai ketentuan ujikom");
+        $runner->assertTrue(count($fakturList) >= 2, "Tabel faktur harus memiliki minimal 2 data transaksi");
 
         if (!empty($fakturList)) {
             $firstNo = $fakturList[0]['no_faktur'];

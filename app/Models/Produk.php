@@ -7,8 +7,7 @@ use App\Core\Model;
 /**
  * Class Produk
  * 
- * Model representasi entitas Produk (Barang/Obat/Item Penjualan)
- * Sesuai Diagram LRS LSP Programmer (FR.IA.04A).
+ * Model representasi entitas Produk (Barang/Obat/Item Penjualan).
  */
 class Produk extends Model
 {

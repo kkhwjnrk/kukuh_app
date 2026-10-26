@@ -11,10 +11,6 @@ use PDOException;
  * Fondasi pemetaan data objek ke tabel basis data (Active Record / Data Mapper).
  * Seluruh interaksi SQL dilakukan melalui Prepared Statements secara otomatis
  * demi keamanan maksimal.
- * 
- * Memenuhi SKKNI:
- * - J.620100.018.02 (Pemrograman Berorientasi Objek)
- * - J.620100.021.02 (Menerapkan Akses Basis Data)
  */
 abstract class Model
 {

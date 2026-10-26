@@ -2,9 +2,8 @@
 /**
  * Modul Fungsi Bantu Terstruktur (Structured Helper Utilities)
  * 
- * Kumpulan fungsi prosedural/terstruktur untuk format data, URL,
+ * Kumpulan fungsi terstruktur untuk format data, URL,
  * sanitasi, kamus istilah, dan token CSRF.
- * Memenuhi SKKNI J.620100.017.02 (Pemrograman Terstruktur).
  */
 
 use App\Core\Auth;

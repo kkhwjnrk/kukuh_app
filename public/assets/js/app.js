@@ -1,5 +1,5 @@
 /**
- * SIM-PRO JavaScript Core Interactivity
+ * Apotek LSP - JavaScript Core Interactivity
  * Pure Vanilla JS, zero dependencies, offline-first.
  */
 

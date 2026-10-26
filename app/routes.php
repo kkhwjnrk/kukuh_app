@@ -6,14 +6,7 @@ use App\Core\Response;
 /**
  * Pendaftaran Rute Aplikasi (Clean URL)
  * 
- * Sesuai Skema Pemrogram LSP Unpam / BNSP
- * Menu Administrator:
- * 1. Beranda (Dashboard)
- * 2. Kelola Data Perusahaan
- * 3. Kelola Data Customer (Preview/Cetak Data Customer)
- * 4. Kelola Data Produk
- * 5. Kelola Data Penjualan (Faktur) (Cetak Faktur)
- * 6. Kelola Pengguna (Admin)
+ * Pengaturan pemetaan URL ke Controller & Middleware
  */
 
 // 1. Rute Beranda & Autentikasi

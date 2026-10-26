@@ -23,7 +23,7 @@
             <strong>Terjadi pada berkas:</strong> <?= htmlspecialchars($exception->getFile()) ?> : baris <strong><?= $exception->getLine() ?></strong>
         </div>
 
-        <h3 style="color: #cbd5e1; font-size: 14px; margin-bottom: 8px;">Stack Trace (SKKNI J.620100.025.02 - Bukti Debugging):</h3>
+        <h3 style="color: #cbd5e1; font-size: 14px; margin-bottom: 8px;">Stack Trace (Detail Error):</h3>
         <div class="trace-box">
             <pre><?= htmlspecialchars($exception->getTraceAsString()) ?></pre>
         </div>

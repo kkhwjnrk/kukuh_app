@@ -1,136 +1,139 @@
-# SIM-PRO: Sistem Informasi Manajemen Terpadu
-> **Universal Modular Boilerplate untuk Ujikom / Sertifikasi BNSP LSP Informatika**  
-> Dibangun dengan standar industri: **Pure PHP Native MVC**, **Clean URL**, **PDO Prepared Statements**, **PSR-12 Guidelines**, dan **Modern Clean Light UI** tanpa ketergantungan NPM / Node.js.
+# Apotek LSP - Sistem Informasi Manajemen Penjualan & Faktur Apotek
+
+Aplikasi berbasis web untuk tata kelola operasional apotek yang mencakup penerbitan faktur penjualan multi-item, katalog produk dan obat-obatan, data rekanan/customer, profil instansi perusahaan, serta modul rekapitulasi laporan penjualan dan persediaan.
+
+Dibangun dengan arsitektur **Pure PHP Native MVC**, **Clean URL**, **PDO Prepared Statements**, dan **Modern Responsive UI** tanpa ketergantungan library eksternal yang rumit sehingga ringan dan mudah dipelihara (*maintainable*).
 
 ---
 
-## 📌 Pemetaan 9 Unit Kompetensi SKKNI / BNSP
+## ✨ Fitur Utama Sistem
 
-| Kode Unit | Judul Unit Kompetensi | Bukti Implementasi pada Proyek |
-| :--- | :--- | :--- |
-| **J.620100.009.01** | Menggunakan Spesifikasi Program | Dokumen SRS, Use Case, Activity Diagram, & Data Dictionary di `docs/SPESIFIKASI.md`. |
-| **J.620100.016.01** | Menulis Kode Sesuai Guidelines & Best Practices | Arsitektur MVC bersih, standar PSR-12, sanitasi XSS, CSRF token, hashing BCRYPT. |
-| **J.620100.017.02** | Mengimplementasikan Pemrograman Terstruktur | Modul helper prosedural terstruktur di `app/Helpers/utility.php`. |
-| **J.620100.018.02** | Mengimplementasikan Pemrograman Berorientasi Objek | Pewarisan (*Inheritance*) `BaseModel`, `BaseController`, enkapsulasi, dan abstraksi. |
-| **J.620100.019.02** | Menggunakan Library / Komponen Pre-Existing | Generator CSV/Excel native dengan UTF-8 BOM dan layout media cetak PDF. |
-| **J.620100.021.02** | Menerapkan Akses Basis Data | PDO Singleton, Prepared Statements kebal SQL Injection, dan ACID Database Transactions. |
-| **J.620100.023.02** | Membuat Dokumen Kode Program | Blok komentar standar PHPDoc pada seluruh kelas/metode, diagram ERD, dan README. |
-| **J.620100.025.02** | Melakukan Debugging | Global Exception Handler, Error Logger di `storage/logs/app.log`, dan Debug mode toggle. |
-| **J.620100.033.02** | Melaksanakan Pengujian Unit Program | Micro Test Runner bawaan (`php tests/run.php`) dengan 11 test case otomatis. |
+1. **Dashboard Ringkasan Operasional**
+   - Ringkasan KPI: Total Omset Penjualan, Total Faktur Diterbitkan, Total Produk, dan Total Pelanggan.
+   - Peringatan dini (*Early Warning System*) stok obat yang menipis (<= 15 unit).
+   - Tabel riwayat transaksi faktur terkini.
+
+2. **Manajemen Faktur & Transaksi Penjualan (ACID)**
+   - Formulir pembuatan faktur interaktif multi-item dengan kalkulasi otomatis Subtotal, PPN (11%), Uang Muka (DP), dan Grand Total.
+   - Perhitungan otomatis tanggal jatuh tempo berdasarkan metode pembayaran tempo yang dipilih.
+   - Tombol simpan otomatis terproteksi jika tidak ada produk yang dipilih.
+   - Pengurangan stok produk otomatis dengan integritas transaksi database (`beginTransaction`, `commit`, `rollBack`).
+   - Format cetak faktur penjualan resmi lengkap dengan kop apotek, nomor izin, rincian barang, dan kolom tanda tangan ganda.
+
+3. **Katalog Produk & Obat-obatan**
+   - Pencatatan master produk (nama obat/barang, jenis/sediaan, harga satuan, dan kuantitas stok).
+   - Indikator visual ketersediaan stok produk.
+
+4. **Data Customer & Rekanan**
+   - Pendataan pelanggan umum dan instansi rekanan (apotek, klinik, rumah sakit).
+   - Fitur cetak rekapitulasi data pelanggan siap print.
+
+5. **Data Perusahaan Penerbit**
+   - Pengaturan informasi profil instansi apotek/perusahaan penerbit faktur (nama, alamat, no. telepon, nomor izin apotek, dan fax).
+
+6. **Modul Laporan Terpadu**
+   - Laporan Penjualan: Filter rentang tanggal, filter metode bayar (Tunai, Transfer, Tempo), total omset, cetak laporan resmi, dan ekspor data ke format CSV/Excel.
+   - Laporan Produk & Stok: Filter jenis obat, filter status stok (Habis, Kritis, Aman), valuasi total aset produk, cetak laporan resmi, dan ekspor CSV.
+
+7. **Manajemen Pengguna & Hak Akses Berjenjang (RBAC)**
+   - Pengelolaan akun dengan pembagian peran:
+     - **Administrator:** Hak akses penuh ke seluruh modul sistem.
+     - **Petugas Kasir:** Akses operasional transaksi faktur, katalog obat, dan data customer.
+     - **Manajer:** Akses pemantauan dashboard eksekutif dan rekapitulasi laporan.
+
+8. **Antarmuka Modern & Ramah Pengguna**
+   - Desain responsif dengan tipografi modern, kartu statistik KPI, dan modal dialog konfirmasi interaktif pengganti dialog bawaan browser.
+   - Footer bar terstruktur di setiap halaman aplikasi.
 
 ---
 
-## 🚀 Panduan Instalasi Cepat
+## 🚀 Panduan Instalasi & Pengoperasian
 
-### 1. Persyaratan Sistem
-- Web Server: Apache (Laragon atau XAMPP) dengan modul `mod_rewrite` aktif.
-- PHP: Versi 7.4 ke atas (Direkomendasikan PHP 8.1 / 8.2).
-- Basis Data: MySQL / MariaDB.
+### Persyaratan Sistem
+- **Web Server:** Apache (Laragon atau XAMPP) dengan ekstensi `mod_rewrite` aktif.
+- **PHP:** Versi 7.4 atau lebih baru (PHP 8.0, 8.1, 8.2 didukung penuh).
+- **Basis Data:** MySQL atau MariaDB.
 
-### 2. Langkah Pengoperasian
-1. Buka folder `C:\laragon\www\` (Laragon) atau `C:\xampp\htdocs\` (XAMPP), lalu *clone* repositori:
-   ```bash
-   git clone https://github.com/kkhwjnrk/kukuh_app.git
-   cd kukuh_app
-   ```
-2. Jalankan migrasi dan seeder otomatis melalui terminal:
+### Langkah Instalasi
+1. Pindahkan folder proyek ke root web server:
+   - Laragon: `C:\laragon\www\kukuh_app`
+   - XAMPP: `C:\xampp\htdocs\kukuh_app`
+
+2. Pastikan service Apache dan MySQL sudah berjalan.
+
+3. Jalankan migrasi dan seeder data awal melalui terminal:
    ```bash
    php database/migrate.php
    ```
-3. Buka peramban (browser) dan akses:
+   *Perintah ini akan membuat database `apotek_lsp`, seluruh tabel relasional, dan data awal yang diperlukan.*
+
+4. Buka peramban (browser) dan akses alamat:
    ```text
-   http://localhost/kukuh_app/login
+   http://localhost/kukuh_app
    ```
 
 ---
 
-## 🔑 Kredensial Akun Pengujian (Demo Asesor)
+## 🔑 Akun Pengguna Bawaan
 
 | Username | Password | Peran (Role) | Hak Akses Utama |
 | :--- | :--- | :--- | :--- |
-| **admin** | `admin123` | Administrator | Akses penuh (Dashboard, Master Data, Transaksi, Laporan, Kelola Pengguna). |
-| **petugas** | `petugas123` | Petugas / Kasir | Operasional harian (Entri transaksi, lihat master data, cetak nota). |
-| **manajer** | `manajer123` | Pimpinan / Manajer | Monitoring eksekutif (Melihat dashboard performa dan rekapitulasi laporan). |
+| **admin** | `password` | Administrator | Akses penuh: Master data, Transaksi, Laporan, Manajemen Pengguna |
+| **petugas** | `password` | Petugas Kasir | Transaksi penjualan, input master data, dan cetak faktur |
+| **kasir** | `password` | Petugas Kasir | Transaksi penjualan, input master data, dan cetak faktur |
+| **manajer** | `password` | Manajer | Monitoring dashboard dan rekapitulasi seluruh laporan |
 
 ---
 
-## 🧪 Menjalankan Pengujian Unit Otomatis (Unit Testing)
+## 🧪 Pengujian Unit Otomatis (Unit Testing)
 
-Sistem telah dilengkapi dengan test runner internal yang dapat dijalankan tanpa Composer:
+Aplikasi dilengkapi dengan test suite mandiri untuk memverifikasi fungsionalitas inti (koneksi database, enkripsi autentikasi, validasi data, integritas relasi model) tanpa memerlukan instalasi PHPUnit atau Composer:
+
 ```bash
 php tests/run.php
 ```
 
-Output:
-```text
-======================================================
-   SIM-PRO AUTOMATED UNIT TEST SUITE (SKKNI 033.02)  
-======================================================
-=== Menjalankan Test Suite: Tests\Unit\DatabaseTest ===
-  [PASS] testDatabaseConnection
-  [PASS] testDatabaseQueryExecution
-=== Menjalankan Test Suite: Tests\Unit\AuthTest ===
-  [PASS] testPasswordHashingAndVerification
-  [PASS] testRoleCheckingLogic
-=== Menjalankan Test Suite: Tests\Unit\ValidationTest ===
-  [PASS] testRequiredValidationPasses
-  [PASS] testRequiredValidationFails
-  [PASS] testNumericValidation
-  [PASS] testEmailValidation
-=== Menjalankan Test Suite: Tests\Unit\ModelTest ===
-  [PASS] testCategoryCount
-  [PASS] testItemCodeGeneration
-  [PASS] testTransactionCodeGeneration
-======================================================
-Total Test Dijalankan : 11
-Sukses (Passed)       : 11
-Gagal  (Failed)       : 0
-======================================================
-[SEMUA UNIT TEST BERHASIL DIUJI DENGAN SEMPURNA!]
-```
-
 ---
 
-## 📁 Struktur Direktori Proyek
+## 📁 Struktur Direktori
 
 ```text
 kukuh_app/
 ├── app/
-│   ├── Controllers/        # Controller: Auth, Dashboard, Item, Kategori, Transaksi, Laporan, User
-│   ├── Core/               # Engine: Router, Controller, Model, Database, Request, Session, Validator, Logger
-│   ├── Helpers/            # Helper prosedural terstruktur (Rupiah, tanggal, format)
-│   ├── Models/             # Active Record PDO Model: User, Category, Item, Transaction, Detail
-│   ├── Views/              # Antarmuka Modern Clean Light Dashboard
-│   └── routes.php          # Definisi Clean URL dan Middleware RBAC
+│   ├── Controllers/        # Controller alur aplikasi (Auth, Dashboard, Faktur, Laporan, dll)
+│   ├── Core/               # Engine inti MVC (Router, Controller, Model, Database, Validator, Logger)
+│   ├── Helpers/            # Utilitas pembantu (format mata uang, tanggal, URL, sanitasi)
+│   ├── Models/             # Model Active Record PDO (User, Perusahaan, Customer, Produk, Faktur)
+│   ├── Views/              # File antarmuka tampilan (HTML/PHP terstruktur)
+│   └── routes.php          # Definisi rute Clean URL dan proteksi Middleware RBAC
 ├── config/
-│   ├── app.php             # Konfigurasi aplikasi & mode debug
-│   ├── database.php        # Konfigurasi koneksi MySQL PDO
-│   └── terms.php           # KAMUS ISTILAH DINAMIS (Kunci adaptasi kilat 15 menit)
+│   ├── app.php             # Konfigurasi nama aplikasi, zona waktu, dan mode debug
+│   ├── database.php        # Kredensial koneksi MySQL PDO
+│   └── terms.php           # Konfigurasi penamaan entitas dan terminologi aplikasi
 ├── database/
-│   ├── schema.sql          # DDL skema relasional tabel MySQL
-│   └── migrate.php         # Script migrasi & seeder 1-klik
+│   ├── schema.sql          # Struktur DDL skema basis data relasional
+│   └── migrate.php         # Script migrasi dan seeder otomatis
 ├── docs/
-│   ├── SPESIFIKASI.md      # Bukti SKKNI Unit 1 & 7 (SRS, Use Case, Activity, ERD)
-│   └── PANDUAN_UJIKOM.md   # Cheat Sheet cara ubah ke Toko/Perpus/Rental saat ujian
+│   └── SPESIFIKASI.md      # Spesifikasi kebutuhan perangkat lunak (SRS) & arsitektur
 ├── public/
-│   ├── assets/             # CSS modern, JavaScript vanilla, dan ikon vektor SVG
-│   ├── uploads/            # Berkas foto produk yang diunggah
-│   ├── .htaccess           # Aturan Pretty URL Apache
-│   └── index.php           # Front Controller
+│   ├── assets/             # Berkas CSS, JavaScript, dan aset visual
+│   ├── .htaccess           # Konfigurasi rewrite rule Apache
+│   └── index.php           # Front Controller / Single Entry Point
 ├── storage/
-│   └── logs/app.log        # Bukti SKKNI Unit 8 (Log Debugging)
-├── tests/                  # Bukti SKKNI Unit 9 (Unit Testing Suite)
-│   ├── Unit/               # Test Case komponen
-│   └── run.php             # Runner CLI pengujian
-├── .gitignore
+│   └── logs/app.log        # Berkas pencatatan log error dan aktivitas sistem
+├── tests/
+│   ├── Unit/               # Kasus uji komponen unit (Database, Auth, Validation, Model)
+│   ├── TestRunner.php      # Test runner engine mandiri
+│   └── run.php             # Eksekutor pengujian unit CLI
 └── README.md
 ```
 
 ---
 
-## 🛡️ Fitur Keamanan Sistem
-1. **SQL Injection Prevention:** 100% menggunakan PDO Prepared Statements dengan binding parameter terpisah.
-2. **Cross-Site Scripting (XSS) Prevention:** Sanitasi global seluruh input formulir via `htmlspecialchars` dan pembersihan entitas HTML.
-3. **Cross-Site Request Forgery (CSRF) Prevention:** Token kriptografi acak `_csrf_token` yang diverifikasi secara otomatis pada seluruh request HTTP POST.
-4. **Session Fixation Prevention:** Regenerasi ID sesi secara berkala saat pengguna berhasil melakukan login.
-5. **Secure Password Storage:** Seluruh kata sandi di-hash menggunakan algoritma standar industri BCRYPT.
+## 🛡️ Standar Kualitas & Keamanan
+
+- **SQL Injection Prevention:** 100% menggunakan PDO Prepared Statements dengan parameter binding.
+- **Cross-Site Scripting (XSS) Prevention:** Sanitasi global seluruh keluaran HTML menggunakan `htmlspecialchars`.
+- **Cross-Site Request Forgery (CSRF) Prevention:** Token verifikasi `_csrf_token` pada seluruh pengiriman form POST.
+- **Secure Password Hashing:** Pengamanan kata sandi menggunakan algoritma standar BCRYPT.
+- **Atomic Transactions (ACID):** Pengelolaan pemotongan stok dan penyimpanan transaksi faktur dengan `BEGIN TRANSACTION` / `COMMIT` / `ROLLBACK`.

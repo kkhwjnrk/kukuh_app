@@ -7,8 +7,7 @@ use App\Core\Model;
 /**
  * Class DetailFaktur
  * 
- * Model representasi entitas Rincian / Detail Faktur Penjualan
- * Sesuai Diagram LRS LSP Programmer (FR.IA.04A).
+ * Model representasi entitas Rincian / Detail Faktur Penjualan.
  */
 class DetailFaktur extends Model
 {

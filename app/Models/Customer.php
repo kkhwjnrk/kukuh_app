@@ -7,8 +7,7 @@ use App\Core\Model;
 /**
  * Class Customer
  * 
- * Model representasi entitas Customer (Pelanggan)
- * Sesuai Diagram LRS LSP Programmer (FR.IA.04A).
+ * Model representasi entitas Customer (Pelanggan).
  */
 class Customer extends Model
 {

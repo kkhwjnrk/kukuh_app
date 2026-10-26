@@ -16,7 +16,7 @@
             &larr; Kembali
         </a>
 
-        <!-- Tombol Cetak Faktur (Menu Ujikom Photo 3) -->
+        <!-- Tombol Cetak Faktur -->
         <a href="<?= url('/faktur/print/' . $faktur['no_faktur']) ?>" target="_blank" class="btn btn-primary">
             <svg fill="none" stroke="currentColor" width="18" height="18" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
             <span>Cetak Faktur Penjualan</span>

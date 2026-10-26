@@ -20,7 +20,7 @@ class User extends Model
      */
     public function getAllUsers(): array
     {
-        $sql = "SELECT id, username, nama_lengkap, role, created_at, updated_at 
+        $sql = "SELECT id, username, nama_lengkap, role, created_at 
                 FROM `{$this->table}` 
                 ORDER BY id ASC";
         return $this->query($sql);

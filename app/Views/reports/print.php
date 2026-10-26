@@ -88,7 +88,7 @@
     <div class="signatures">
         <div class="sign-box">
             <div>Mengetahui,</div>
-            <div>Pimpinan / Asesor Penguji</div>
+            <div>Pimpinan Apotek</div>
             <div class="sign-line">( ........................................ )</div>
         </div>
         <div class="sign-box">

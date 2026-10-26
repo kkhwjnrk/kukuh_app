@@ -12,7 +12,7 @@ use PDO;
  * Class Transaction
  * 
  * Model transaksi utama dengan mekanisme Atomic Transactions (ACID)
- * menggunakan PDO Transaction (SKKNI J.620100.021.02).
+ * menggunakan PDO Transaction.
  */
 class Transaction extends Model
 {

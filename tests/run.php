@@ -26,7 +26,7 @@ use Tests\Unit\ValidationTest;
 use Tests\Unit\ModelTest;
 
 echo "======================================================\n";
-echo "   SIM-PRO AUTOMATED UNIT TEST SUITE (SKKNI 033.02)  \n";
+echo "   APOTEK LSP - AUTOMATED UNIT TEST SUITE             \n";
 echo "======================================================\n";
 
 $runner = new TestRunner();

@@ -1,9 +1,7 @@
 <?php
 /**
  * Kamus Istilah Dinamis (Dynamic Terminology Dictionary)
- * 
- * Sesuai Skema Pemrogram LSP Unpam / BNSP
- * Studi Kasus: Sistem Faktur Penjualan
+ * Konfigurasi penamaan entitas dan terminologi aplikasi Apotek LSP.
  */
 
 return [

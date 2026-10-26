@@ -46,7 +46,7 @@ class App
     }
 
     /**
-     * Mendaftarkan penangan exception dan fatal error global (SKKNI J.620100.025.02).
+     * Mendaftarkan penangan exception dan fatal error global.
      *
      * @return void
      */

@@ -1,6 +1,6 @@
 <?php
 /**
- * SIM-PRO Front Controller & Single Entry Point
+ * Apotek LSP - Front Controller & Single Entry Point
  * 
  * Mengatur pemuatan kelas otomatis (Autoloading PSR-4),
  * inisialisasi helper terstruktur, konfigurasi rute, dan bootstrap aplikasi.

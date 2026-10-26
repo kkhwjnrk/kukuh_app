@@ -29,28 +29,6 @@
                         Masuk Sekarang
                     </button>
                 </form>
-
-                <!-- KOTAK BANTUAN AKUN DEMO / UJIKOM -->
-                <div style="margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid #f1f5f9;">
-                    <div style="font-size: 0.725rem; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; margin-bottom: 0.75rem;">
-                        Akun Pengujian:
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem;">
-                        <div style="display: flex; justify-content: space-between; background: #f8fafc; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <span><strong>admin</strong></span>
-                            <span class="badge" style="background: #eef2ff; color: #4338ca;">Administrator</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; background: #f8fafc; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <span><strong>petugas</strong></span>
-                            <span class="badge" style="background: #f0f9ff; color: #0369a1;">Petugas Kasir</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; background: #f8fafc; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                            <span><strong>manajer</strong></span>
-                            <span class="badge" style="background: #f5f3ff; color: #6d28d9;">Pimpinan</span>
-                        </div>
-                        <p style="font-size: 0.8rem; text-align: center; margin-top: 0.5rem;">Password: password</p>
-                    </div>
-                </div>
             </div>
         </div>
 
