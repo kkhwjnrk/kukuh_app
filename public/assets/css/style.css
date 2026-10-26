@@ -622,13 +622,14 @@ a:hover {
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     display: none;
     align-items: center;
     justify-content: center;
-    z-index: 50;
-    padding: 1.5rem;
+    z-index: 9999;
+    padding: 1.25rem;
 }
 
 .modal-overlay.active {
@@ -642,11 +643,117 @@ a:hover {
     width: 100%;
     max-width: 520px;
     border: 1px solid var(--border-color);
-    animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Modern Dialog Styling */
+.modal-dialog-modern {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 440px;
+    overflow: hidden;
+    animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.modal-dialog-modern .modal-body-content {
+    padding: 2.25rem 1.75rem 1.5rem 1.75rem;
+    text-align: center;
+}
+
+.modal-dialog-modern .modal-icon-badge {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    transition: transform 0.2s ease;
+}
+
+.modal-dialog-modern:hover .modal-icon-badge {
+    transform: scale(1.05);
+}
+
+.modal-icon-badge.danger {
+    background: #fee2e2;
+    color: #dc2626;
+    box-shadow: 0 0 0 8px #fef2f2;
+}
+
+.modal-icon-badge.warning {
+    background: #ffedd5;
+    color: #ea580c;
+    box-shadow: 0 0 0 8px #fff7ed;
+}
+
+.modal-icon-badge.info {
+    background: #e0f2fe;
+    color: #0284c7;
+    box-shadow: 0 0 0 8px #f0f9ff;
+}
+
+.modal-icon-badge.success {
+    background: #dcfce7;
+    color: #16a34a;
+    box-shadow: 0 0 0 8px #f0fdf4;
+}
+
+.modal-dialog-modern .modal-title-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+}
+
+.modal-dialog-modern .modal-desc-text {
+    font-size: 0.925rem;
+    color: #64748b;
+    line-height: 1.55;
+    margin: 0;
+}
+
+.modal-dialog-modern .modal-footer-actions {
+    background: #f8fafc;
+    padding: 1.15rem 1.75rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-dialog-modern .modal-close-x {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    line-height: 1;
+    transition: all 0.15s ease;
+}
+
+.modal-dialog-modern .modal-close-x:hover {
+    background: #f1f5f9;
+    color: #0f172a;
 }
 
 @keyframes modalPop {
-    from { opacity: 0; transform: scale(0.96); }
+    from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
 }
 

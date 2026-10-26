@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById(modalId);
         if (modal) {
             modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
     };
 
@@ -26,10 +27,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById(modalId);
         if (modal) {
             modal.classList.remove('active');
+            // Cek jika tidak ada modal lain yang masih aktif
+            if (!document.querySelector('.modal-overlay.active')) {
+                document.body.style.overflow = '';
+            }
         }
     };
 
-    // Konfirmasi Hapus Modal Global
+    // Tutup modal dengan tombol Escape
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            const activeModal = document.querySelector('.modal-overlay.active');
+            if (activeModal) {
+                closeModal(activeModal.id);
+            }
+        }
+    });
+
+    // Konfirmasi Hapus Modal Modern Global
     window.confirmDelete = function (actionUrl, itemName) {
         const modal = document.getElementById('deleteConfirmModal');
         const form = document.getElementById('deleteConfirmForm');
@@ -42,25 +57,150 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             openModal('deleteConfirmModal');
         } else {
-            if (confirm('Apakah Anda yakin ingin menghapus ' + (itemName || 'data ini') + '?')) {
-                const f = document.createElement('form');
-                f.method = 'POST';
-                f.action = actionUrl;
-                
-                // Masukkan token CSRF
-                const csrfInput = document.querySelector('input[name="_csrf_token"]');
-                if (csrfInput) {
-                    const hidden = document.createElement('input');
-                    hidden.type = 'hidden';
-                    hidden.name = '_csrf_token';
-                    hidden.value = csrfInput.value;
-                    f.appendChild(hidden);
+            // Fallback interaktif tanpa browser confirm bawaan
+            AppModal.confirm({
+                title: 'Hapus Data?',
+                message: 'Apakah Anda yakin ingin menghapus <strong>' + (itemName || 'data ini') + '</strong>? Tindakan ini tidak dapat dibatalkan.',
+                type: 'danger',
+                confirmText: 'Ya, Hapus',
+                onConfirm: function () {
+                    const f = document.createElement('form');
+                    f.method = 'POST';
+                    f.action = actionUrl;
+                    const csrfInput = document.querySelector('input[name="_csrf_token"]');
+                    if (csrfInput) {
+                        const hidden = document.createElement('input');
+                        hidden.type = 'hidden';
+                        hidden.name = '_csrf_token';
+                        hidden.value = csrfInput.value;
+                        f.appendChild(hidden);
+                    }
+                    document.body.appendChild(f);
+                    f.submit();
                 }
-                document.body.appendChild(f);
-                f.submit();
-            }
+            });
         }
     };
+
+    // Konfirmasi Keluar / Logout Modern
+    window.confirmLogout = function (event, logoutUrl) {
+        if (event) {
+            event.preventDefault();
+        }
+        const modal = document.getElementById('logoutConfirmModal');
+        const logoutBtn = document.getElementById('logoutConfirmBtn');
+        if (modal && logoutBtn) {
+            logoutBtn.href = logoutUrl;
+            openModal('logoutConfirmModal');
+        } else {
+            AppModal.confirm({
+                title: 'Keluar dari Sistem?',
+                message: 'Sesi login Anda di <strong>Apotek LSP</strong> akan diakhiri. Pastikan semua data transaksi telah tersimpan.',
+                type: 'warning',
+                confirmText: 'Ya, Keluar',
+                onConfirm: function () {
+                    window.location.href = logoutUrl;
+                }
+            });
+        }
+    };
+
+    // Universal Modal System (Modern Confirmation & Alert)
+    window.AppModal = {
+        confirm: function (options) {
+            return new Promise(function (resolve) {
+                const modal = document.getElementById('universalConfirmModal');
+                if (!modal) {
+                    resolve(true);
+                    return;
+                }
+
+                const titleEl = document.getElementById('universalModalTitle');
+                const msgEl = document.getElementById('universalModalMessage');
+                const confirmBtn = document.getElementById('universalModalConfirmBtn');
+                const cancelBtn = document.getElementById('universalModalCancelBtn');
+                const iconBadge = document.getElementById('universalModalIconBadge');
+
+                const type = options.type || 'warning';
+                titleEl.textContent = options.title || 'Konfirmasi Tindakan';
+                msgEl.innerHTML = options.message || 'Apakah Anda yakin ingin melanjutkan tindakan ini?';
+
+                confirmBtn.textContent = options.confirmText || 'Lanjutkan';
+                cancelBtn.textContent = options.cancelText || 'Batal';
+                cancelBtn.style.display = options.hideCancel ? 'none' : 'inline-flex';
+
+                // Terapkan tipe tombol & ikon
+                confirmBtn.className = 'btn ' + (options.confirmClass || (type === 'danger' ? 'btn-danger' : (type === 'warning' ? 'btn-warning' : 'btn-primary')));
+                iconBadge.className = 'modal-icon-badge ' + type;
+
+                document.getElementById('universalModalIconWarning').style.display = (type === 'warning') ? 'block' : 'none';
+                document.getElementById('universalModalIconDanger').style.display = (type === 'danger') ? 'block' : 'none';
+                document.getElementById('universalModalIconInfo').style.display = (type === 'info') ? 'block' : 'none';
+                document.getElementById('universalModalIconSuccess').style.display = (type === 'success') ? 'block' : 'none';
+
+                function cleanup() {
+                    confirmBtn.removeEventListener('click', onConfirm);
+                    cancelBtn.removeEventListener('click', onCancel);
+                }
+
+                function onConfirm() {
+                    closeModal('universalConfirmModal');
+                    cleanup();
+                    resolve(true);
+                    if (typeof options.onConfirm === 'function') options.onConfirm();
+                }
+
+                function onCancel() {
+                    closeModal('universalConfirmModal');
+                    cleanup();
+                    resolve(false);
+                    if (typeof options.onCancel === 'function') options.onCancel();
+                }
+
+                confirmBtn.addEventListener('click', onConfirm);
+                cancelBtn.addEventListener('click', onCancel);
+
+                openModal('universalConfirmModal');
+            });
+        },
+
+        alert: function (message, title, type) {
+            return window.AppModal.confirm({
+                title: title || 'Pemberitahuan',
+                message: message,
+                type: type || 'warning',
+                confirmText: 'Mengerti',
+                hideCancel: true
+            });
+        }
+    };
+
+    // Intersepsi Deklaratif untuk Elemen dengan atribut [data-confirm]
+    document.addEventListener('click', function (e) {
+        const trigger = e.target.closest('[data-confirm]');
+        if (!trigger) return;
+        e.preventDefault();
+
+        const message = trigger.getAttribute('data-confirm');
+        const title = trigger.getAttribute('data-confirm-title') || 'Konfirmasi';
+        const type = trigger.getAttribute('data-confirm-type') || 'warning';
+        const confirmText = trigger.getAttribute('data-confirm-btn') || 'Ya, Lanjutkan';
+
+        AppModal.confirm({
+            title: title,
+            message: message,
+            type: type,
+            confirmText: confirmText
+        }).then(function (confirmed) {
+            if (confirmed) {
+                if (trigger.tagName === 'A' && trigger.href) {
+                    window.location.href = trigger.href;
+                } else if (trigger.form) {
+                    trigger.form.submit();
+                }
+            }
+        });
+    });
 
     // 3. Image Preview Before Upload
     const imageInput = document.getElementById('imageUploadInput');
@@ -122,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
         addItemBtn.addEventListener('click', function () {
             const selectedOption = itemSelect.options[itemSelect.selectedIndex];
             if (!selectedOption || !selectedOption.value) {
-                alert('Silakan pilih barang terlebih dahulu.');
+                AppModal.alert('Silakan pilih barang terlebih dahulu.', 'Peringatan', 'warning');
                 return;
             }
 
@@ -138,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const qtyInput = existingRow.querySelector('.cart-qty-input');
                 const curQty = parseInt(qtyInput.value) || 1;
                 if (curQty + 1 > itemStock) {
-                    alert(`Stok tidak mencukupi! Maksimal tersedia: ${itemStock}`);
+                    AppModal.alert(`Stok tidak mencukupi! Maksimal tersedia: ${itemStock}`, 'Stok Terbatas', 'warning');
                     return;
                 }
                 qtyInput.value = curQty + 1;
@@ -185,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const max = parseInt(e.target.max) || 9999;
                 let val = parseInt(e.target.value) || 1;
                 if (val > max) {
-                    alert(`Jumlah melebihi stok yang tersedia (${max})`);
+                    AppModal.alert(`Jumlah melebihi stok yang tersedia (${max})`, 'Batas Stok', 'warning');
                     e.target.value = max;
                 } else if (val < 1) {
                     e.target.value = 1;

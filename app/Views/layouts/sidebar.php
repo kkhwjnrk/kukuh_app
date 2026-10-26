@@ -66,7 +66,7 @@
             <div class="user-name"><?= htmlspecialchars(auth('nama_lengkap') ?? 'Pengguna') ?></div>
             <div><?= badge_role(auth('role') ?? 'petugas') ?></div>
         </div>
-        <a href="<?= url('/logout') ?>" title="Keluar dari sistem" style="color: #94a3b8; display: flex;" onclick="return confirm('Keluar dari aplikasi?')">
+        <a href="<?= url('/logout') ?>" title="Keluar dari sistem" style="color: #94a3b8; display: flex;" onclick="confirmLogout(event, '<?= url('/logout') ?>')">
             <svg fill="none" stroke="currentColor" width="20" height="20" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
         </a>
     </div>
