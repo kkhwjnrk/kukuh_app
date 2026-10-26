@@ -7,7 +7,7 @@
  */
 
 return [
-    'name'      => 'SIM-PRO V1',
+    'name'      => 'Apotek LSP',
     'env'       => 'development', // 'development' atau 'production'
     'debug'     => true,          // Tampilkan rincian error saat pengembangan
     'base_url'  => 'http://localhost/kukuh_app', // Sesuaikan dengan virtual host / path Laragon

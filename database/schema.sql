@@ -4,8 +4,8 @@
 -- Sesuai Diagram Logical Record Structure (LRS)
 -- ==============================================================
 
-CREATE DATABASE IF NOT EXISTS `kukuh_app_db` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `kukuh_app_db`;
+CREATE DATABASE IF NOT EXISTS `apotek_lsp` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `apotek_lsp`;
 
 -- Hapus tabel lama jika ada (urutan child ke parent)
 DROP TABLE IF EXISTS `detail_faktur`;

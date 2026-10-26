@@ -7,10 +7,10 @@
  */
 
 return [
-    'system_title' => 'Sistem Faktur Penjualan',
-    'app_name'     => 'FAKTUR-PRO',
-    'tagline'      => 'Aplikasi Pengelolaan Faktur & Penjualan Terpadu',
-    'organization' => 'Lembaga Sertifikasi Profesi (LSP)',
+    'system_title' => 'Sistem Informasi Apotek LSP',
+    'app_name'     => 'Apotek LSP',
+    'tagline'      => 'Aplikasi Pengelolaan Faktur & Penjualan Apotek',
+    'organization' => 'LSP Universitas Pamulang / BNSP',
 
     // Entitas Perusahaan
     'perusahaan' => [

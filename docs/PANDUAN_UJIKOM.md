@@ -17,7 +17,7 @@ Dokumen ini adalah panduan rahasia Anda saat hari-H ujian untuk melakukan penyes
    ```bash
    php database/migrate.php
    ```
-   *Perintah ini akan otomatis membuat basis data `kukuh_app_db`, menyusun 5 tabel relasional, serta mengisikan data awal (Admin, Petugas, Manajer, Kategori, Barang, dan Transaksi).*
+   *Perintah ini akan otomatis membuat basis data `apotek_lsp`, menyusun 5 tabel relasional LRS, serta mengisikan data awal (Admin, Petugas, Manajer, Perusahaan, Customer, Produk, dan Faktur).*
 5. Buka peramban (browser) dan akses:
    ```text
    http://localhost/kukuh_app/login
