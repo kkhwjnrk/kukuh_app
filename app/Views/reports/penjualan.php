@@ -11,51 +11,51 @@
 </div>
 
 <!-- RINGKASAN KPI LAPORAN PENJUALAN -->
-<div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 1.5rem;">
+<div class="stats-grid">
     <!-- 1. Total Transaksi Faktur -->
-    <div class="kpi-card">
-        <div class="kpi-icon info">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+    <div class="stat-card">
+        <div class="stat-icon sky">
+            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
         </div>
-        <div class="kpi-content">
-            <div class="kpi-label">Total Faktur Penjualan</div>
-            <div class="kpi-value"><?= number_format($summary['total_faktur'], 0, ',', '.') ?> <span style="font-size: 0.85rem; font-weight: normal; color: #64748b;">Transaksi</span></div>
+        <div class="stat-content">
+            <div class="stat-label">Total Faktur Penjualan</div>
+            <div class="stat-value"><?= number_format($summary['total_faktur'], 0, ',', '.') ?> <span style="font-size: 0.85rem; font-weight: normal; color: #64748b;">Trx</span></div>
         </div>
     </div>
 
     <!-- 2. Total Omset / Grand Total -->
-    <div class="kpi-card">
-        <div class="kpi-icon success">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <div class="stat-card">
+        <div class="stat-icon emerald">
+            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
-        <div class="kpi-content">
-            <div class="kpi-label">Total Omset Penjualan</div>
-            <div class="kpi-value" style="color: #16a34a;"><?= format_rupiah($summary['total_grand_total']) ?></div>
+        <div class="stat-content">
+            <div class="stat-label">Total Omset Penjualan</div>
+            <div class="stat-value" style="color: #16a34a; font-size: 1.25rem;"><?= format_rupiah($summary['total_grand_total']) ?></div>
         </div>
     </div>
 
     <!-- 3. Total PPN 11% -->
-    <div class="kpi-card">
-        <div class="kpi-icon warning">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+    <div class="stat-card">
+        <div class="stat-icon amber">
+            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
         </div>
-        <div class="kpi-content">
-            <div class="kpi-label">Total Pajak (PPN 11%)</div>
-            <div class="kpi-value" style="color: #ea580c;"><?= format_rupiah($summary['total_ppn']) ?></div>
+        <div class="stat-content">
+            <div class="stat-label">Total Pajak (PPN 11%)</div>
+            <div class="stat-value" style="color: #ea580c; font-size: 1.25rem;"><?= format_rupiah($summary['total_ppn']) ?></div>
         </div>
     </div>
 
     <!-- 4. Uang Masuk / Piutang -->
-    <div class="kpi-card">
-        <div class="kpi-icon primary">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+    <div class="stat-card">
+        <div class="stat-icon indigo">
+            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
         </div>
-        <div class="kpi-content">
-            <div class="kpi-label">Terbayar / Sisa Piutang</div>
-            <div class="kpi-value" style="font-size: 1.15rem;">
+        <div class="stat-content">
+            <div class="stat-label">Terbayar / Sisa Piutang</div>
+            <div class="stat-value" style="font-size: 1.15rem;">
                 <?= format_rupiah($summary['total_dp']) ?>
-                <div style="font-size: 0.75rem; color: #dc2626; font-weight: 500; margin-top: 0.15rem;">
-                    Sisa Piutang: <?= format_rupiah($summary['total_sisa']) ?>
+                <div style="font-size: 0.75rem; color: #dc2626; font-weight: 600; margin-top: 0.15rem;">
+                    Sisa: <?= format_rupiah($summary['total_sisa']) ?>
                 </div>
             </div>
         </div>

@@ -11,48 +11,48 @@
 </div>
 
 <!-- RINGKASAN KPI LAPORAN PRODUK -->
-<div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 1.5rem;">
+<div class="stats-grid">
     <!-- 1. Total Macam Produk -->
-    <div class="kpi-card">
-        <div class="kpi-icon primary">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+    <div class="stat-card">
+        <div class="stat-icon indigo">
+            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
         </div>
-        <div class="kpi-content">
-            <div class="kpi-label">Total Varian Produk</div>
-            <div class="kpi-value"><?= number_format($summary['total_produk'], 0, ',', '.') ?> <span style="font-size: 0.85rem; font-weight: normal; color: #64748b;">Item</span></div>
+        <div class="stat-content">
+            <div class="stat-label">Total Varian Produk</div>
+            <div class="stat-value"><?= number_format($summary['total_produk'], 0, ',', '.') ?> <span style="font-size: 0.85rem; font-weight: normal; color: #64748b;">Item</span></div>
         </div>
     </div>
 
     <!-- 2. Total Fisik Stok Unit -->
-    <div class="kpi-card">
-        <div class="kpi-icon info">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+    <div class="stat-card">
+        <div class="stat-icon sky">
+            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
         </div>
-        <div class="kpi-content">
-            <div class="kpi-label">Total Fisik Persediaan</div>
-            <div class="kpi-value"><?= number_format($summary['total_stok'], 0, ',', '.') ?> <span style="font-size: 0.85rem; font-weight: normal; color: #64748b;">Unit / Pcs</span></div>
+        <div class="stat-content">
+            <div class="stat-label">Total Fisik Persediaan</div>
+            <div class="stat-value"><?= number_format($summary['total_stok'], 0, ',', '.') ?> <span style="font-size: 0.85rem; font-weight: normal; color: #64748b;">Unit</span></div>
         </div>
     </div>
 
     <!-- 3. Total Nilai Aset / Valuasi -->
-    <div class="kpi-card">
-        <div class="kpi-icon success">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <div class="stat-card">
+        <div class="stat-icon emerald">
+            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
-        <div class="kpi-content">
-            <div class="kpi-label">Total Nilai Aset Persediaan</div>
-            <div class="kpi-value" style="color: #16a34a;"><?= format_rupiah($summary['total_nilai_aset']) ?></div>
+        <div class="stat-content">
+            <div class="stat-label">Total Nilai Aset Persediaan</div>
+            <div class="stat-value" style="color: #16a34a; font-size: 1.25rem;"><?= format_rupiah($summary['total_nilai_aset']) ?></div>
         </div>
     </div>
 
     <!-- 4. Peringatan Stok Menipis & Habis -->
-    <div class="kpi-card">
-        <div class="kpi-icon <?= ($summary['count_menipis'] > 0 || $summary['count_habis'] > 0) ? 'warning' : 'info' ?>">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+    <div class="stat-card">
+        <div class="stat-icon <?= ($summary['count_menipis'] > 0 || $summary['count_habis'] > 0) ? 'amber' : 'sky' ?>">
+            <svg fill="none" stroke="currentColor" width="24" height="24" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
         </div>
-        <div class="kpi-content">
-            <div class="kpi-label">Status Stok Kritis</div>
-            <div class="kpi-value" style="font-size: 1.15rem; color: <?= ($summary['count_habis'] > 0) ? '#dc2626' : '#ea580c' ?>;">
+        <div class="stat-content">
+            <div class="stat-label">Status Stok Kritis</div>
+            <div class="stat-value" style="font-size: 1.15rem; color: <?= ($summary['count_habis'] > 0) ? '#dc2626' : '#ea580c' ?>;">
                 <?= $summary['count_menipis'] + $summary['count_habis'] ?> <span style="font-size: 0.85rem; font-weight: normal; color: #64748b;">Perlu Restock</span>
                 <div style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-top: 0.15rem;">
                     (<?= $summary['count_menipis'] ?> Menipis, <?= $summary['count_habis'] ?> Habis)
